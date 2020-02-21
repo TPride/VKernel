@@ -1,6 +1,8 @@
 package vkernel;
 
 import cn.nukkit.plugin.PluginBase;
+import vkernel.manager.Manager;
+
 import java.io.File;
 
 /**
@@ -8,6 +10,7 @@ import java.io.File;
  */
 public class VKernel extends PluginBase {
     private static VKernel instance;
+    private final Manager manager = new Manager();
     public static final String[] configDirs = new String[]{
             "game"
     };
@@ -16,10 +19,6 @@ public class VKernel extends PluginBase {
     public void onLoad() {
         instance = this;
         init();
-    }
-
-    public static VKernel getInstance() {
-        return instance;
     }
 
     public void kernelInfo(String msg) {
@@ -35,5 +34,21 @@ public class VKernel extends PluginBase {
                 if (!dir.mkdirs())
                     kernelInfo("无法创建文件夹 ".concat(dirname));
         }
+    }
+
+    /**
+     * VKernel Instance
+     * @return VKernel
+     */
+    public static VKernel getInstance() {
+        return instance;
+    }
+
+    /**
+     * 获取管理机制
+     * @return Manager
+     */
+    public final Manager getManager() {
+        return manager;
     }
 }
