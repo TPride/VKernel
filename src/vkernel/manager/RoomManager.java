@@ -14,36 +14,36 @@ public class RoomManager {
 
     }
 
-    public final boolean existsRoom(String roomName) {
-        if (roomName == null)
+    public final boolean exists(String levelName) {
+        if (levelName == null)
             return false;
-        return rooms.containsKey(roomName);
+        return rooms.containsKey(levelName);
     }
 
-    public final Room getRoom(String roomName) {
-        if (roomName == null)
+    public final Room getRoom(String levelName) {
+        if (levelName == null)
             return null;
-        if (!existsRoom(roomName))
+        if (!exists(levelName))
             return null;
-        return rooms.get(roomName);
+        return rooms.get(levelName);
     }
 
-    public final boolean put(String roomName, Room room) {
-        if (roomName == null || room == null)
+    public final boolean put(String levelName, Room room) {
+        if (levelName == null || room == null)
             return false;
-        else if (!existsRoom(roomName)) {
-            rooms.put(roomName, room);
+        else if (!exists(levelName)) {
+            rooms.put(levelName, room);
             return true;
         }
         return false;
     }
 
-    public final boolean remove(String roomName) {
-        if (roomName == null)
+    public final boolean remove(String levelName) {
+        if (levelName == null)
             return false;
-        if (existsRoom(roomName)) {
-            if (rooms.get(roomName).state == RoomState.NOT) {
-                rooms.remove(roomName);
+        if (exists(levelName)) {
+            if (rooms.get(levelName).state == RoomState.NOT) {
+                rooms.remove(levelName);
                 return true;
             }
             return false;

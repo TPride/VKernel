@@ -1,8 +1,7 @@
 package vkernel.manager;
 
 import cn.nukkit.Player;
-import vkernel.includes.PlayerData;
-
+import vkernel.api.player.PlayerData;
 import java.util.LinkedHashMap;
 
 /**
@@ -15,24 +14,22 @@ public class PlayerManager {
 
     }
 
-    public final boolean existsPlayer(String playerName) {
+    public final boolean exists(String playerName) {
         if (playerName == null)
-            throw new NullPointerException();
-        else
-            return players.containsKey(playerName);
+            return false;
+        return players.containsKey(playerName);
     }
 
-    public final boolean existsPlayer(Player player) {
+    public final boolean exists(Player player) {
         if (player == null)
-            throw new NullPointerException();
-        else
-            return players.containsKey(player.getName());
+            return false;
+        return players.containsKey(player.getName());
     }
 
     public final PlayerData getPlayerData(String playerName) {
         if (playerName == null)
             return null;
-        if (!existsPlayer(playerName))
+        if (!exists(playerName))
             return null;
         return players.get(playerName);
     }
@@ -40,7 +37,7 @@ public class PlayerManager {
     public final PlayerData getPlayerData(Player player) {
         if (player == null)
             return null;
-        if (!existsPlayer(player))
+        if (!exists(player))
             return null;
         return players.get(player.getName());
     }
@@ -48,7 +45,7 @@ public class PlayerManager {
     public final boolean put(Player player, PlayerData playerData) {
         if (player == null || playerData == null)
             return false;
-        if (!existsPlayer(player.getName())) {
+        if (!exists(player.getName())) {
             players.put(player.getName(), playerData);
             return true;
         }
@@ -58,7 +55,7 @@ public class PlayerManager {
     public final boolean remove(String playerName) {
         if (playerName == null)
             return false;
-        if (existsPlayer(playerName)) {
+        if (exists(playerName)) {
             players.remove(playerName);
             return true;
         }

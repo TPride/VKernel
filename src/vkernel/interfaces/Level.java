@@ -1,5 +1,6 @@
 package vkernel.interfaces;
 
+import cn.nukkit.Server;
 import com.sun.istack.internal.NotNull;
 
 /**
@@ -43,9 +44,9 @@ public abstract class Level {
      */
     public abstract int getWishTime();
 
-    /**
-     * 获取Level对象
-     * @return cn.nukkit.level.Level
-     */
-    public abstract cn.nukkit.level.Level getLevel();
+    public cn.nukkit.level.Level getLevel() {
+        if (!Server.getInstance().isLevelLoaded(levelName))
+            return null;
+        return Server.getInstance().getLevelByName(levelName);
+    }
 }

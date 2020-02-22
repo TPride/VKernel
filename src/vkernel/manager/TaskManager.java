@@ -13,9 +13,35 @@ public class TaskManager {
 
     }
 
-    public final boolean existsTask(String roomName) {
-        if (roomName == null)
+    public final boolean exists(String levelName) {
+        if (levelName == null)
             return false;
-        return tasks.containsKey(roomName);
+        return tasks.containsKey(levelName);
+    }
+
+    public final boolean put(String levelName, RoomTask roomTask) {
+        if (levelName == null || levelName.length() == 0 || roomTask == null)
+            return false;
+        if (tasks.containsKey(levelName))
+            return false;
+        tasks.put(levelName, roomTask);
+        return true;
+    }
+
+    public final boolean remove(String levelName) {
+        if (levelName == null || levelName.length() == 0)
+            return false;
+        if (!tasks.containsKey(levelName))
+            return false;
+        tasks.remove(levelName);
+        return true;
+    }
+
+    public final RoomTask get(String levelName) {
+        if (levelName == null || levelName.length() == 0)
+            return null;
+        if (!tasks.containsKey(levelName))
+            return null;
+        return tasks.get(levelName);
     }
 }

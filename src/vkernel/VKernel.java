@@ -2,7 +2,6 @@ package vkernel;
 
 import cn.nukkit.plugin.PluginBase;
 import vkernel.manager.Manager;
-
 import java.io.File;
 
 /**
@@ -19,6 +18,7 @@ public class VKernel extends PluginBase {
     public void onLoad() {
         instance = this;
         init();
+        initLevelRoom();
     }
 
     public void kernelInfo(String msg) {
@@ -50,5 +50,20 @@ public class VKernel extends PluginBase {
      */
     public final Manager getManager() {
         return manager;
+    }
+
+    private void initLevelRoom() {
+        File[] games = new File(getDataFolder() + File.separator + configDirs[0]).listFiles();
+        String world = getServer().getDataPath() + File.separator + "worlds" + File.separator;
+        for (int i = 0; i < games.length; i++) {
+            manager.getLevelManager().registerGame(games[i].getName());
+            File[] configs = games[i].listFiles();
+            for (int j = 0; j < configs.length; j++) {
+                String name = configs[j].getName().substring(0, configs[j].getName().lastIndexOf("."));
+                if (!new File(world, name).exists())
+                    continue;
+                manager.getLevelManager().put(games[i].getName(), name);
+            }
+        }
     }
 }

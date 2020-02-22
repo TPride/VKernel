@@ -1,5 +1,6 @@
 package vkernel.interfaces;
 
+import com.sun.istack.internal.NotNull;
 import vkernel.includes.RoomState;
 import java.util.LinkedList;
 
@@ -11,7 +12,7 @@ public class Room {
     public LinkedList<String> players = new LinkedList<>();
     public RoomState state = RoomState.NOT;
 
-    public Room(Level level) {
+    public Room(@NotNull Level level) {
         this.roomLevel = level;
     }
 

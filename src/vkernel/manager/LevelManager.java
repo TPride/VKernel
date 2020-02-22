@@ -112,4 +112,15 @@ public class LevelManager {
         }
         return levels.keySet().toArray(new String[0])[i];
     }
+
+    public final boolean registerGame(String gameName) {
+        if (gameName == null || gameName.length() == 0)
+            return false;
+        if (existsGame(gameName))
+            return false;
+        if (!new File(VKernel.getInstance().getDataFolder() + File.separator + VKernel.configDirs[0] + File.separator + gameName).exists())
+            return false;
+        levels.put(gameName, new LinkedList<>());
+        return true;
+    }
 }
