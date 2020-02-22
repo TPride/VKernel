@@ -7,11 +7,11 @@ import vkernel.interfaces.Room;
 /**
  * Created by TPride on 2020/2/23.
  */
-public class GameEvent extends Event {
+public class RoomEvent extends Event {
     protected Room room;
     private static final HandlerList handlerList = new HandlerList();
 
-    public GameEvent(Room room) {
+    public RoomEvent(Room room) {
         this.room = room;
     }
 
