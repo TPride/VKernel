@@ -15,6 +15,10 @@ public class GameConfig {
         this.gameName = gameName;
     }
 
+    /**
+     * 注册游戏文件夹
+     * @return
+     */
     public boolean registerFolder() {
         File dir = new File(VKernel.getInstance().getDataFolder() + File.separator + VKernel.configDirs[0] + File.separator + gameName);
         if (dir.exists())
