@@ -28,7 +28,7 @@ public class RoomManager {
         return rooms.get(roomName);
     }
 
-    public final boolean putRoom(String roomName, Room room) {
+    public final boolean put(String roomName, Room room) {
         if (roomName == null || room == null)
             return false;
         else if (!existsRoom(roomName)) {
@@ -38,7 +38,7 @@ public class RoomManager {
         return false;
     }
 
-    public final boolean removeRoom(String roomName) {
+    public final boolean remove(String roomName) {
         if (roomName == null)
             return false;
         if (existsRoom(roomName)) {

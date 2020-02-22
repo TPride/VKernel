@@ -45,7 +45,7 @@ public class PlayerManager {
         return players.get(player.getName());
     }
 
-    public final boolean putPlayer(Player player, PlayerData playerData) {
+    public final boolean put(Player player, PlayerData playerData) {
         if (player == null || playerData == null)
             throw new NullPointerException();
         else if (!existsPlayer(player.getName())) {
@@ -55,7 +55,7 @@ public class PlayerManager {
         return false;
     }
 
-    public final boolean removePlayer(String playerName) {
+    public final boolean remove(String playerName) {
         if (playerName == null)
             throw new NullPointerException();
         if (existsPlayer(playerName)) {

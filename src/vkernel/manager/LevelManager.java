@@ -1,68 +1,115 @@
 package vkernel.manager;
 
-import cn.nukkit.level.Level;
-
+import vkernel.VKernel;
+import java.io.File;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 /**
  * Created by TPride on 2020/2/22.
  */
 public class LevelManager {
-    private LinkedList<String> gameLevels = new LinkedList<>();
+    private LinkedHashMap<String, LinkedList<String>> levels = new LinkedHashMap<>();
 
     public LevelManager() {
 
     }
 
+    public final boolean existsGame(String gameName) {
+        if (gameName == null)
+            return false;
+        if (gameName.length() == 0)
+            return false;
+        return levels.containsKey(gameName);
+    }
+
+    public final boolean existsLevel(String gameName, String levelName) {
+        if (gameName == null || levelName == null || gameName.length() == 0 || levelName.length() == 0)
+            return false;
+        if (!existsGame(gameName))
+            return false;
+        return levels.get(gameName).contains(levelName);
+    }
+
     public final boolean existsLevel(String levelName) {
-        if (levelName == null)
+        if (levelName == null || levelName.length() == 0)
             return false;
-        return gameLevels.contains(levelName);
+        for (Iterator<LinkedList<String>> iterator = levels.values().iterator(); iterator.hasNext();) {
+            LinkedList<String> l = iterator.next();
+            if (l.contains(levelName))
+                return true;
+        }
+        return false;
     }
 
-    public final boolean existsLevel(Level level) {
-        if (level == null)
+    public final boolean put(String gameName, String levelName) {
+        if (gameName == null || levelName == null || gameName.length() == 0 || levelName.length() == 0)
             return false;
-        return gameLevels.contains(level.getName());
-    }
-
-    public final boolean putLevel(String levelName) {
-        if (levelName == null)
+        if (!existsGame(gameName) || existsLevel(levelName))
             return false;
-        if (existsLevel(levelName))
+        if (!new File(VKernel.getInstance().getDataFolder() + File.separator + VKernel.configDirs[0] + File.separator + gameName, levelName.concat(".yml")).exists() || !new File(VKernel.getInstance().getServer().getDataPath() + File.separator + "worlds" + File.separator + levelName).exists())
             return false;
-        gameLevels.add(levelName);
+        levels.get(gameName).add(levelName);
         return true;
     }
 
-    public final boolean putLevel(Level level) {
-        if (level == null)
+    public final boolean remove(String gameName, String levelName) {
+        if (gameName == null || levelName == null || gameName.length() == 0 || levelName.length() == 0)
             return false;
-        if (existsLevel(level))
+        if (!existsGame(levelName) || !existsLevel(levelName))
             return false;
-        gameLevels.add(level.getName());
+        if (!existsLevel(gameName, levelName))
+            return false;
+        levels.get(gameName).remove(levelName);
         return true;
     }
 
-    public final boolean removeLevel(String levelName) {
-        if (levelName == null)
+    public final boolean remove(String levelName) {
+        if (levelName == null || levelName.length() == 0)
             return false;
         if (!existsLevel(levelName))
             return false;
-        gameLevels.remove(levelName);
+        String gameName = getGameName(levelName);
+        levels.get(gameName).remove(levelName);
         return true;
     }
 
-    public final boolean removeLevel(Level level) {
-        if (level == null)
-            return false;
-        if (!existsLevel(level))
-            return false;
-        gameLevels.remove(level.getName());
-        return true;
+    public final LinkedHashMap<String, LinkedList<String>> getLevels() {
+        return levels;
     }
 
-    public final LinkedList<String> getGameLevels() {
-        return gameLevels;
+    public final LinkedList<String> getLevels(String gameName) {
+        if (gameName == null || gameName.length() == 0)
+            return new LinkedList<>();
+        if (!existsGame(gameName))
+            return new LinkedList<>();
+        return levels.get(gameName);
+    }
+
+    public final LinkedList<String> getGame(String levelName) {
+        if (levelName == null || levelName.length() == 0)
+            return new LinkedList<>();
+        for (Iterator<LinkedList<String>> iterator = levels.values().iterator(); iterator.hasNext();) {
+            LinkedList<String> l = iterator.next();
+            if (l.contains(levelName))
+                return l;
+        }
+        return new LinkedList<>();
+    }
+
+    public final String getGameName(String levelName) {
+        if (levelName == null || levelName.length() == 0)
+            return null;
+        if (!existsLevel(levelName))
+            return null;
+        int i = 0;
+        for (Iterator<LinkedList<String>> iterator = levels.values().iterator(); iterator.hasNext();) {
+            LinkedList<String> l = iterator.next();
+            if (l.contains(levelName))
+                break;
+            i++;
+        }
+        return levels.keySet().toArray(new String[0])[i];
     }
 }

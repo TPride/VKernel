@@ -7,11 +7,13 @@ public class Manager {
     private final LevelManager levelManager;
     private final PlayerManager playerManager;
     private final RoomManager roomManager;
+    private final TaskManager taskManager;
 
     public Manager() {
         levelManager = new LevelManager();
         playerManager = new PlayerManager();
         roomManager = new RoomManager();
+        taskManager = new TaskManager();
     }
 
     public final LevelManager getLevelManager() {
@@ -24,5 +26,9 @@ public class Manager {
 
     public final RoomManager getRoomManager() {
         return roomManager;
+    }
+
+    public TaskManager getTaskManager() {
+        return taskManager;
     }
 }

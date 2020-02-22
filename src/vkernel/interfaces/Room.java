@@ -6,7 +6,7 @@ import java.util.LinkedList;
 /**
  * Created by TPride on 2020/2/22.
  */
-public abstract class Room {
+public class Room {
     private Level roomLevel;
     public LinkedList<String> players = new LinkedList<>();
     public RoomState state = RoomState.NOT;
@@ -19,13 +19,7 @@ public abstract class Room {
         return players;
     }
 
-    public Level getRoomLevel() {
+    public final Level getRoomLevel() {
         return roomLevel;
     }
-
-    /**
-     * 开始计时器
-     * @return Boolean
-     */
-    public abstract boolean startTask();
 }
