@@ -9,7 +9,7 @@ import vkernel.interfaces.Room;
  * Created by TPride on 2020/2/23.
  */
 public class PlayerRoomEvent extends PlayerEvent {
-    private final Room room;
+    protected Room room;
     private static final HandlerList handlerList = new HandlerList();
 
     public PlayerRoomEvent(Player player, Room room) {
