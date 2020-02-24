@@ -10,8 +10,8 @@ public abstract class Level {
     protected String levelName;
     protected String gameName;
 
-    public Level(@NotNull String levelName) {
-        this.levelName = levelName;
+    public Level() {
+
     }
 
     public void setGameName(@NotNull String gameName) {
@@ -48,5 +48,13 @@ public abstract class Level {
         if (!Server.getInstance().isLevelLoaded(levelName))
             return null;
         return Server.getInstance().getLevelByName(levelName);
+    }
+
+    public Level getRoomLevel() {
+        return this;
+    }
+
+    public <T extends Level> T  getRoomLevel(T level) {
+        return level;
     }
 }

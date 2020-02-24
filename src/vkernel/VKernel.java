@@ -1,5 +1,6 @@
 package vkernel;
 
+import cn.nukkit.Server;
 import cn.nukkit.plugin.PluginBase;
 import vkernel.manager.Manager;
 import java.io.File;
@@ -19,6 +20,7 @@ public class VKernel extends PluginBase {
         instance = this;
         init();
         initLevelRoom();
+        Server.getInstance().getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
     public void kernelInfo(String msg) {
