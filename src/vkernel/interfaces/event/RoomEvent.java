@@ -15,7 +15,7 @@ public class RoomEvent extends Event {
         this.room = room;
     }
 
-    public final Room getRoom() {
+    public Room getRoom() {
         return room;
     }
 

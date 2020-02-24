@@ -20,4 +20,8 @@ public class PlayerRoomEvent extends PlayerEvent {
     public static HandlerList getHandlerList() {
         return handlerList;
     }
+
+    public Room getRoom() {
+        return room;
+    }
 }
