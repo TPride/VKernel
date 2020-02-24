@@ -44,8 +44,6 @@ public class PlayerData {
     public final PlayerData unplay() {
         if (state == PlayerState.UNPLAYING)
             return this;
-        if (playRoom == null)
-            return this;
         state = PlayerState.UNPLAYING;
         return this;
     }
