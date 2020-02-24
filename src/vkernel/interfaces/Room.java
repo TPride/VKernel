@@ -7,7 +7,7 @@ import java.util.LinkedList;
  * Created by TPride on 2020/2/22.
  */
 public class Room {
-    private Level roomLevel;
+    protected Level roomLevel;
     public LinkedList<String> players = new LinkedList<>();
     public RoomState state = RoomState.NOT;
 
@@ -23,7 +23,7 @@ public class Room {
         return roomLevel;
     }
 
-    public <T extends Room> T  getRoom(T room) {
+    public <T extends Room> T getRoom(T room) {
         return room;
     }
 }
