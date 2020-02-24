@@ -53,8 +53,4 @@ public abstract class Level {
     public Level getRoomLevel() {
         return this;
     }
-
-    public <T extends Level> T  getRoomLevel(T level) {
-        return level;
-    }
 }

@@ -22,8 +22,4 @@ public class Room {
     public Level getRoomLevel() {
         return roomLevel;
     }
-
-    public <T extends Room> T getRoom(T room) {
-        return room;
-    }
 }
