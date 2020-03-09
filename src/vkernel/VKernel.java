@@ -1,8 +1,31 @@
 package vkernel;
 
+//                       _oo0oo_
+//                      o8888888o
+//                      88" . "88
+//                      (| -_- |)
+//                      0\  =  /0
+//                    ___/`---'\___
+//                  .' \\|     |// '.
+//                 / \\|||  :  |||// \
+//                / _||||| -:- |||||- \
+//               |   | \\\  -  /// |   |
+//               | \_|  ''\---/''  |_/ |
+//               \  .-\__  '-'  ___/-. /
+//             ___'. .'  /--.--\  `. .'___
+//          ."" '<  `.___\_<|>_/___.' >' "".
+//         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+//         \  \ `_.   \_ __\ /__ _/   .-` /  /
+//     =====`-.____`.___ \_____/___.-`___.-'=====
+//                       `=---='
+//     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//               佛祖保佑         永无BUG
+
 import cn.nukkit.Server;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
+import vkernel.api.FileApi;
+import vkernel.command.HubCommand;
 import vkernel.manager.Manager;
 import java.io.File;
 
@@ -11,6 +34,7 @@ import java.io.File;
  */
 public class VKernel extends PluginBase {
     private static VKernel instance;
+    private FileApi fileApi = new FileApi(this);;
     private final Manager manager = new Manager();
     public static final String[] configDirs = new String[] {
             "game",
@@ -20,9 +44,8 @@ public class VKernel extends PluginBase {
     @Override
     public void onLoad() {
         instance = this;
-        init();
         initLevelRoom();
-        Server.getInstance().getPluginManager().registerEvents(new PlayerListener(), this);
+        init();
     }
 
     public void kernelInfo(String msg) {
@@ -31,6 +54,8 @@ public class VKernel extends PluginBase {
     }
 
     private void init() {
+        initFile();
+        initCommand();
         File dir;
         for (String dirname : configDirs) {
             dir = new File(getDataFolder() + File.separator + dirname);
@@ -38,6 +63,7 @@ public class VKernel extends PluginBase {
                 if (!dir.mkdirs())
                     kernelInfo("无法创建文件夹 ".concat(dirname));
         }
+        initEvent();
     }
 
     /**
@@ -56,6 +82,10 @@ public class VKernel extends PluginBase {
         return manager;
     }
 
+    public final FileApi getFileApi() {
+        return fileApi;
+    }
+
     private void initLevelRoom() {
         File[] games = new File(getDataFolder() + File.separator + configDirs[0]).listFiles();
         String world = getServer().getDataPath() + File.separator + "worlds" + File.separator;
@@ -71,7 +101,24 @@ public class VKernel extends PluginBase {
         }
     }
 
+    /**
+     * 初始化配置文件
+     */
     private void initFile() {
         saveResource("resource/setting.yml", false);
+    }
+
+    /**
+     * 初始化指令
+     */
+    private void initCommand() {
+        getServer().getCommandMap().register("hub", new HubCommand());
+    }
+
+    /**
+     * 初始化事件
+     */
+    private void initEvent() {
+        Server.getInstance().getPluginManager().registerEvents(new PlayerListener(), this);
     }
 }
