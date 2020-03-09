@@ -16,11 +16,13 @@ public class PlayerData {
     private final Player player;
     public final Game game;
     public final Config config;
+    public final Level level;
 
     public PlayerData(Player player) {
         this.player = player;
         game = new Game();
         config = new Config();
+        level = new Level();
     }
 
     public class Game {
