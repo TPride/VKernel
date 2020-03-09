@@ -2,6 +2,7 @@ package vkernel;
 
 import cn.nukkit.Server;
 import cn.nukkit.plugin.PluginBase;
+import cn.nukkit.utils.Config;
 import vkernel.manager.Manager;
 import java.io.File;
 
@@ -12,7 +13,8 @@ public class VKernel extends PluginBase {
     private static VKernel instance;
     private final Manager manager = new Manager();
     public static final String[] configDirs = new String[] {
-            "game"
+            "game",
+            "user"
     };
 
     @Override
@@ -67,5 +69,9 @@ public class VKernel extends PluginBase {
                 manager.getLevelManager().put(games[i].getName(), name);
             }
         }
+    }
+
+    private void initFile() {
+        saveResource("resource/setting.yml", false);
     }
 }

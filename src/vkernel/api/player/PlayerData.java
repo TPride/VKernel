@@ -8,43 +8,48 @@ import vkernel.interfaces.Room;
  * Created by TPride on 2020/2/22.
  */
 public class PlayerData {
-    public Room playRoom;
-    public final Player player;
-    private PlayerState state = PlayerState.UNPLAYING;
+    private final Player player;
+    public final Game game;
 
     public PlayerData(Player player) {
-        playRoom = null;
         this.player = player;
+        game = new Game();
     }
 
-    public final Room getPlayRoom() {
-        return playRoom;
+    public class File {
+
     }
 
-    public final PlayerData setPlayRoom(Room room) {
-        if (room == null)
+    public class Game {
+        public Room playRoom;
+        private PlayerState state = PlayerState.UNPLAYING;
+        public final Room getPlayRoom() {
+            return playRoom;
+        }
+
+        public final Game setPlayRoom(Room room) {
+            playRoom = room;
             return this;
-        playRoom = room;
-        return this;
-    }
+        }
 
-    public final PlayerState getState() {
-        return state;
-    }
+        public final PlayerState getState() {
+            return state;
+        }
 
-    public final PlayerData play() {
-        if (state == PlayerState.PLAYING)
+        public final Game play() {
+            if (state == PlayerState.PLAYING)
+                return this;
+            if (playRoom == null)
+                return this;
+            state = PlayerState.PLAYING;
             return this;
-        if (playRoom == null)
-            return this;
-        state = PlayerState.PLAYING;
-        return this;
-    }
+        }
 
-    public final PlayerData unplay() {
-        if (state == PlayerState.UNPLAYING)
+        public final Game unplay() {
+            if (state == PlayerState.UNPLAYING)
+                return this;
+            state = PlayerState.UNPLAYING;
             return this;
-        state = PlayerState.UNPLAYING;
-        return this;
+        }
     }
 }

@@ -23,33 +23,21 @@ public abstract class RoomTask extends Task {
         return room;
     }
 
-    public int getWaitTime() {
+    public final int getWaitTime() {
         return wait;
     }
 
-    public int getPlayTime() {
+    public final int getPlayTime() {
         return play;
     }
 
-    public int getWishTime() {
+    public final int getWishTime() {
         return wish;
     }
 
-    public void init() {
-        if (room.state != RoomState.NOT)
-            return;
+    public final void init() {
         wait = room.getRoomLevel().getWaitTime();
         play = room.getRoomLevel().getPlayTime();
         wish = room.getRoomLevel().getWishTime();
-    }
-
-    public void stop() {
-        room.state = RoomState.NOT;
-        VKernel.getInstance().getManager().getTaskManager().remove(room.getRoomLevel().levelName);
-        room.players.clear();
-        wait = room.getRoomLevel().getWaitTime();
-        play = room.getRoomLevel().getPlayTime();
-        wish = room.getRoomLevel().getWishTime();
-        cancel();
     }
 }
