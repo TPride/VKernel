@@ -11,7 +11,7 @@ import java.io.File;
 public class GameConfig {
     private String gameName;
 
-    public GameConfig(@NotNull String gameName) {
+    public GameConfig(String gameName) {
         this.gameName = gameName;
     }
 

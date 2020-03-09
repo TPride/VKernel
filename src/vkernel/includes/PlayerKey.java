@@ -9,5 +9,5 @@ public interface PlayerKey {
     String MONEY = ".money";
     String DIAMOND = ".diamond";
 
-    String PRIVILEGE = "privilege"; //不算OP
+    String GUILD = "guild";
 }

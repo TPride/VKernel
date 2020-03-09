@@ -23,7 +23,6 @@ package vkernel;
 
 import cn.nukkit.Server;
 import cn.nukkit.plugin.PluginBase;
-import cn.nukkit.utils.Config;
 import vkernel.api.FileApi;
 import vkernel.command.HubCommand;
 import vkernel.manager.Manager;
@@ -105,7 +104,7 @@ public class VKernel extends PluginBase {
      * 初始化配置文件
      */
     private void initFile() {
-        saveResource("resource/setting.yml", false);
+        saveResource("setting.yml", false);
     }
 
     /**
