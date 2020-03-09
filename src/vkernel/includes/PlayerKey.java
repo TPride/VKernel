@@ -10,4 +10,8 @@ public interface PlayerKey {
     String DIAMOND = ".diamond";
 
     String GUILD = "guild";
+
+    String PREFIX = "prefix";
+    String USING = ".using";
+    String PRELIST = ".list";
 }

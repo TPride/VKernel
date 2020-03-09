@@ -1,11 +1,12 @@
 package vkernel.api.player;
 
 import cn.nukkit.Player;
-import cn.nukkit.utils.Config;
 import vkernel.VKernel;
+import vkernel.api.StringMath;
+import vkernel.includes.ConfigKey;
+import vkernel.includes.PlayerKey;
 import vkernel.includes.PlayerState;
 import vkernel.interfaces.Room;
-
 import java.io.File;
 
 /**
@@ -71,9 +72,46 @@ public class PlayerData {
         public final boolean create() {
             if (exists())
                 return false;
-            cn.nukkit.utils.Config config = getConfig();
-
+            VKernel.getInstance().saveResource("initialPlayer.yml", VKernel.configDirs[1] + File.separator + player.getName() + ".yml", false);
             return true;
+        }
+
+        public final boolean delete() {
+            if (!exists())
+                return false;
+            return getFile().delete();
+        }
+    }
+
+    public class Level {
+        public int getUpLine() {
+            if (getGrade() >= 0)
+                return (int)StringMath.eval(VKernel.getInstance().getFileApi().getConfig().getString(ConfigKey.LEVEL.concat(ConfigKey.FORMAT)).replace("g", "" + getGrade()));
+            return -1;
+        }
+
+        public int getGrade() {
+            if (!config.exists())
+                return -1;
+            return config.getConfig().getInt(PlayerKey.GRADE_SYSTEM.concat(PlayerKey.GRADE));
+        }
+
+        public int getExp() {
+            if (!config.exists())
+                return -1;
+            return config.getConfig().getInt(PlayerKey.GRADE_SYSTEM.concat(PlayerKey.EXP));
+        }
+
+        public Level setGrade(int grade) {
+            if (!config.exists() || grade < 0)
+                return this;
+            int line = getUpLine();
+            cn.nukkit.utils.Config config1 = config.getConfig();
+            config1.set(PlayerKey.GRADE_SYSTEM.concat(PlayerKey.GRADE), grade);
+            if (getUpLine() < line)
+                config1.set(PlayerKey.GRADE_SYSTEM.concat(PlayerKey.EXP), 0);
+            config1.save();
+            return this;
         }
     }
 }

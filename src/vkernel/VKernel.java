@@ -105,6 +105,7 @@ public class VKernel extends PluginBase {
      */
     private void initFile() {
         saveResource("setting.yml", false);
+        saveResource("config.yml", false);
     }
 
     /**

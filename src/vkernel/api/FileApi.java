@@ -15,4 +15,8 @@ public class FileApi {
     public Config getSettings() {
         return new Config(main.getDataFolder() + File.separator + "settings.yml", Config.YAML);
     }
+
+    public Config getConfig() {
+        return new Config(main.getDataFolder() + File.separator + "config.yml", Config.YAML);
+    }
 }

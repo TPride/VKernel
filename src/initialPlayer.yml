@@ -5,3 +5,6 @@ currency:
   money: 0
   diamond: 0
 guild: ~
+prefix:
+  using: ~
+  list: []
