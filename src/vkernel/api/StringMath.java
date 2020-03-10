@@ -24,9 +24,11 @@ public class StringMath {
     }
 
     public static double eval(String expression) {
-        if (null == expression || "".equals(expression.trim())) throw new IllegalArgumentException("表达式不能为空");
+        if (expression == null || expression.trim().equals(""))
+            throw new IllegalArgumentException("表达式不能为空");
         Matcher matcher = EXPRESSION_PATTERN.matcher(expression);
-        if (!matcher.matches()) throw new IllegalArgumentException("表达式含有非法字符");
+        if (!matcher.matches())
+            throw new IllegalArgumentException("表达式含有非法字符");
         Stack<String> optStack = new Stack<>();
         Stack<BigDecimal> numStack = new Stack<>();
         StringBuilder curNumBuilder = new StringBuilder(16);
@@ -44,11 +46,11 @@ public class StringMath {
                     if (optStack.empty()) {
                         optStack.push(curOpt);
                     } else {
-                        if (curOpt.equals("(")) {
+                        if (curOpt.equals("("))
                             optStack.push(curOpt);
-                        } else if (curOpt.equals(")")) {
+                        else if (curOpt.equals(")"))
                             directCalc(optStack, numStack, true);
-                        } else if (curOpt.equals("=")) {
+                        else if (curOpt.equals("=")) {
                             directCalc(optStack, numStack, false);
                             return numStack.pop().doubleValue();
                         } else compareAndCalc(optStack, numStack, curOpt);
@@ -120,7 +122,6 @@ public class StringMath {
     }
 
     private static int getPriority(String opt1, String opt2) {
-        int priority = OPT_PRIORITY_MAP.get(opt2) - OPT_PRIORITY_MAP.get(opt1);
-        return priority;
+        return OPT_PRIORITY_MAP.get(opt2) - OPT_PRIORITY_MAP.get(opt1);
     }
 }

@@ -23,7 +23,7 @@ package vkernel;
 
 import cn.nukkit.Server;
 import cn.nukkit.plugin.PluginBase;
-import vkernel.api.FileApi;
+import cn.nukkit.utils.Config;
 import vkernel.command.HubCommand;
 import vkernel.manager.Manager;
 import java.io.File;
@@ -33,7 +33,7 @@ import java.io.File;
  */
 public class VKernel extends PluginBase {
     private static VKernel instance;
-    private FileApi fileApi = new FileApi(this);;
+    private final FileInstance FileInstance = new FileInstance();;
     private final Manager manager = new Manager();
     public static final String[] configDirs = new String[] {
             "game",
@@ -81,8 +81,8 @@ public class VKernel extends PluginBase {
         return manager;
     }
 
-    public final FileApi getFileApi() {
-        return fileApi;
+    public final FileInstance getFileInstance() {
+        return FileInstance;
     }
 
     private void initLevelRoom() {
@@ -120,5 +120,18 @@ public class VKernel extends PluginBase {
      */
     private void initEvent() {
         Server.getInstance().getPluginManager().registerEvents(new PlayerListener(), this);
+    }
+
+    public class FileInstance {
+        public FileInstance() {
+        }
+
+        public Config getSettings() {
+            return new Config(getDataFolder() + File.separator + "settings.yml", Config.YAML);
+        }
+
+        public Config getConfig() {
+            return new Config(getDataFolder() + File.separator + "config.yml", Config.YAML);
+        }
     }
 }

@@ -1,2 +1,6 @@
 level:
   format: "(g*500)+1500"
+  max: 1000
+currency:
+  auto-money: 0
+  auto-diamond: 0

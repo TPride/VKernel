@@ -17,6 +17,9 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         if (VKernel.getInstance().getManager().getTaskManager().exists(player.getName()))
             return;
-        VKernel.getInstance().getManager().getPlayerManager().put(player, new PlayerData(player));
+        PlayerData playerData = new PlayerData(player);
+        playerData.config.create();
+        VKernel.getInstance().getManager().getPlayerManager().put(player, playerData);
+
     }
 }
