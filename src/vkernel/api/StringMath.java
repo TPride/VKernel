@@ -43,9 +43,9 @@ public class StringMath {
                         curNumBuilder.delete(0, curNumBuilder.length());
                     }
                     String curOpt = String.valueOf(c);
-                    if (optStack.empty()) {
+                    if (optStack.empty())
                         optStack.push(curOpt);
-                    } else {
+                    else {
                         if (curOpt.equals("("))
                             optStack.push(curOpt);
                         else if (curOpt.equals(")"))
@@ -58,7 +58,8 @@ public class StringMath {
                 }
             }
         }
-        if (curNumBuilder.length() > 0) numStack.push(new BigDecimal(curNumBuilder.toString()));
+        if (curNumBuilder.length() > 0)
+            numStack.push(new BigDecimal(curNumBuilder.toString()));
         directCalc(optStack, numStack, false);
         return numStack.pop().doubleValue();
     }
@@ -81,7 +82,8 @@ public class StringMath {
                 optStack.push(curOpt);
             else
                 compareAndCalc(optStack, numStack, curOpt);
-        } else optStack.push(curOpt);
+        } else
+            optStack.push(curOpt);
     }
 
     private static void directCalc(Stack<String> optStack, Stack<BigDecimal> numStack, boolean isBracket) {
