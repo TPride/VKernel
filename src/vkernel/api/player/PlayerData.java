@@ -5,6 +5,8 @@ import cn.nukkit.Server;
 import vkernel.VKernel;
 import vkernel.api.StringMath;
 import vkernel.event.player.PlayerAddExpEvent;
+import vkernel.event.player.PlayerDownGradeEvent;
+import vkernel.event.player.PlayerReduceExpEvent;
 import vkernel.event.player.PlayerUpGradeEvent;
 import vkernel.includes.ConfigKey;
 import vkernel.includes.PlayerKey;
@@ -20,12 +22,14 @@ public class PlayerData {
     public final Game game;
     public final Config config;
     public final Level level;
+    public String nick;
 
     public PlayerData(Player player) {
         this.player = player;
         game = new Game();
         config = new Config();
         level = new Level();
+        nick = player.getName();
     }
 
     public class Game {
@@ -94,13 +98,6 @@ public class PlayerData {
     }
 
     public class Level {
-        public int getAllExp() {
-            if (config.exists()) {
-
-            }
-            return -1;
-        }
-
         public int getUpLine() {
             if (getGrade() >= 0)
                 return (int)StringMath.eval(VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.LEVEL.concat(ConfigKey.FORMAT)).replace("g", "" + getGrade()));
@@ -119,6 +116,15 @@ public class PlayerData {
             return config.getConfig().getInt(PlayerKey.GRADE_SYSTEM.concat(PlayerKey.GRADE));
         }
 
+        public int getAllExp() {
+            if (!config.exists())
+                return 0;
+            int result = getExp();
+            for (int a = getGrade() - 1; a >= 0; a--)
+                result += getUpLine(a);
+            return result;
+        }
+
         public int getExp() {
             if (!config.exists())
                 return -1;
@@ -130,9 +136,11 @@ public class PlayerData {
                 int line = getUpLine();
                 cn.nukkit.utils.Config config1 = config.getConfig();
                 config1.set(PlayerKey.GRADE_SYSTEM.concat(PlayerKey.GRADE), grade);
-                if (getUpLine() < line)
-                    config1.set(PlayerKey.GRADE_SYSTEM.concat(PlayerKey.EXP), 0);
                 config1.save();
+                if (getUpLine() < line) {
+                    config1.set(PlayerKey.GRADE_SYSTEM.concat(PlayerKey.EXP), 0);
+                    config1.save();
+                }
                 return true;
             }
             return false;
@@ -182,6 +190,36 @@ public class PlayerData {
                 if (!setExp(getExp() + event.getAddExp())) {
                     event.setCancelled();
                     return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public boolean reduceExp(int exp) {
+            if (config.exists() && exp > 0) {
+                if (getExp() >= exp) {
+                    PlayerReduceExpEvent reduceExpEvent;
+                    Server.getInstance().getPluginManager().callEvent(reduceExpEvent = new PlayerReduceExpEvent(player, exp));
+                    if (reduceExpEvent.isCancelled())
+                        return false;
+                    setExp(getExp() - reduceExpEvent.getReduceExp());
+                } else {
+                    if (getAllExp() < exp)
+                        return false;
+                    int g = 1;
+                    int nowExp = getExp() + getUpLine(getGrade() - g);
+                    for (; exp >= nowExp; g++)
+                        nowExp += getUpLine(getGrade() - g);
+                    PlayerReduceExpEvent reduceExpEvent;
+                    Server.getInstance().getPluginManager().callEvent(reduceExpEvent = new PlayerReduceExpEvent(player, exp));
+                    if (reduceExpEvent.isCancelled())
+                        return false;
+                    nowExp -= exp;
+                    PlayerDownGradeEvent downGradeEvent = new PlayerDownGradeEvent(player, g, getGrade(), getGrade() - g, false);
+                    Server.getInstance().getPluginManager().callEvent(downGradeEvent);
+                    setGrade(downGradeEvent.getNewGrade());
+                    setExp(nowExp);
                 }
                 return true;
             }

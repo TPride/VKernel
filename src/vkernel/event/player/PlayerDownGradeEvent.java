@@ -7,16 +7,31 @@ import vkernel.api.player.PlayerData;
 import vkernel.event.VKernelPlayerEvent;
 
 public class PlayerDownGradeEvent extends VKernelPlayerEvent implements Cancellable {
-    private int downGrade, newGrade;
+    private int downGrade, oldGrade, newGrade;
+    private final boolean canSetCancelled;
 
-    public PlayerDownGradeEvent(Player player, int downGrade, int newGrade) {
+    public PlayerDownGradeEvent(Player player, int downGrade, int oldGrade, int newGrade) {
         super(player);
         this.downGrade = downGrade;
         this.newGrade = newGrade;
+        this.oldGrade = oldGrade;
+        this.canSetCancelled = true;
+    }
+
+    public PlayerDownGradeEvent(Player player, int downGrade, int oldGrade, int newGrade, boolean canSetCancelled) {
+        super(player);
+        this.downGrade = downGrade;
+        this.newGrade = newGrade;
+        this.oldGrade = oldGrade;
+        this.canSetCancelled = canSetCancelled;
     }
 
     public final int getDownGrade() {
         return downGrade;
+    }
+
+    public final int getOldGrade() {
+        return oldGrade;
     }
 
     public final int getNewGrade() {
@@ -30,5 +45,19 @@ public class PlayerDownGradeEvent extends VKernelPlayerEvent implements Cancella
             newGrade = playerData.level.getGrade() - downGrade;
         }
         return this;
+    }
+
+    @Override
+    public void setCancelled() {
+        if (!canSetCancelled)
+            return;
+        super.setCancelled();
+    }
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        if (!canSetCancelled)
+            return;
+        super.setCancelled(cancelled);
     }
 }
