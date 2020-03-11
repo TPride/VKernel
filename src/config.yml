@@ -2,5 +2,7 @@ level:
   format: "(g*500)+1500"
   max: 1000
 currency:
+  money-name: "铜币"
+  point-name: "钻石"
   auto-money: 0
-  auto-diamond: 0
+  auto-point: 0

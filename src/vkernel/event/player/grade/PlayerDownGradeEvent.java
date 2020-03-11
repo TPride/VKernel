@@ -1,4 +1,4 @@
-package vkernel.event.player;
+package vkernel.event.player.grade;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.Cancellable;
@@ -49,15 +49,13 @@ public class PlayerDownGradeEvent extends VKernelPlayerEvent implements Cancella
 
     @Override
     public void setCancelled() {
-        if (!canSetCancelled)
-            return;
-        super.setCancelled();
+        if (canSetCancelled)
+            super.setCancelled();
     }
 
     @Override
     public void setCancelled(boolean cancelled) {
-        if (!canSetCancelled)
-            return;
-        super.setCancelled(cancelled);
+        if (canSetCancelled)
+            super.setCancelled(cancelled);
     }
 }

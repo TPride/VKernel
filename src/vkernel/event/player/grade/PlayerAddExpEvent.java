@@ -1,4 +1,4 @@
-package vkernel.event.player;
+package vkernel.event.player.grade;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.Cancellable;

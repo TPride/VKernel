@@ -7,7 +7,7 @@ public interface PlayerKey {
 
     String CURRENCY_SYSTEM = "currency";
     String MONEY = ".money";
-    String DIAMOND = ".diamond";
+    String POINT = ".point";
 
     String GUILD = "guild";
 

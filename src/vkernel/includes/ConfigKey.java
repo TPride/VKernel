@@ -7,6 +7,8 @@ public interface ConfigKey {
     String FORMAT = ".format";
 
     String CURRENCY = "currency";
+    String MONEY_NAME = ".money-name";
+    String POINT_NAME = ".point-name";
     String MONEY = ".auto-money";
-    String DIAMOND = ".auto-diamond";
+    String POINT = ".auto-point";
 }
