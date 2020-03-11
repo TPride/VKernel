@@ -43,8 +43,20 @@ public class VKernel extends PluginBase {
     @Override
     public void onLoad() {
         instance = this;
-        initLevelRoom();
         init();
+        kernelInfo("加载完毕");
+    }
+
+    @Override
+    public void onEnable() {
+        initCommand();
+        initEvent();
+        kernelInfo("VKernel已启用");
+    }
+
+    @Override
+    public void onDisable() {
+        kernelInfo("VKernel已停用");
     }
 
     public void kernelInfo(String msg) {
@@ -53,8 +65,6 @@ public class VKernel extends PluginBase {
     }
 
     private void init() {
-        initFile();
-        initCommand();
         File dir;
         for (String dirname : configDirs) {
             dir = new File(getDataFolder() + File.separator + dirname);
@@ -62,7 +72,8 @@ public class VKernel extends PluginBase {
                 if (!dir.mkdirs())
                     kernelInfo("无法创建文件夹 ".concat(dirname));
         }
-        initEvent();
+        initFile();
+        initLevelRoom();
     }
 
     /**

@@ -12,14 +12,11 @@ import vkernel.api.player.PlayerData;
 public class PlayerListener implements Listener {
     @EventHandler
     public void onPreLogin(PlayerPreLoginEvent event) {
-        if (event.isCancelled())
-            return;
         Player player = event.getPlayer();
         if (VKernel.getInstance().getManager().getTaskManager().exists(player.getName()))
             return;
         PlayerData playerData = new PlayerData(player);
         playerData.config.create();
         VKernel.getInstance().getManager().getPlayerManager().put(player, playerData);
-
     }
 }
