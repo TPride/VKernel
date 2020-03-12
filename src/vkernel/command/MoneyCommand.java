@@ -1,4 +1,4 @@
-package vkernel.command.money;
+package vkernel.command;
 
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
