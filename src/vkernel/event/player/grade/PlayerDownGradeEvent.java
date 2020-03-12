@@ -6,11 +6,11 @@ import vkernel.VKernel;
 import vkernel.api.player.PlayerData;
 import vkernel.event.VKernelPlayerEvent;
 
-public class PlayerDownGradeEvent extends VKernelPlayerEvent implements Cancellable {
+public class PlayerDownGradeEvent extends GradeEvent implements Cancellable {
     private int downGrade, oldGrade, newGrade;
     private final boolean canSetCancelled;
 
-    public PlayerDownGradeEvent(Player player, int downGrade, int oldGrade, int newGrade) {
+    public PlayerDownGradeEvent(String player, int downGrade, int oldGrade, int newGrade) {
         super(player);
         this.downGrade = downGrade;
         this.newGrade = newGrade;
@@ -18,8 +18,24 @@ public class PlayerDownGradeEvent extends VKernelPlayerEvent implements Cancella
         this.canSetCancelled = true;
     }
 
-    public PlayerDownGradeEvent(Player player, int downGrade, int oldGrade, int newGrade, boolean canSetCancelled) {
+    public PlayerDownGradeEvent(String player, int downGrade, int oldGrade, int newGrade, boolean canSetCancelled) {
         super(player);
+        this.downGrade = downGrade;
+        this.newGrade = newGrade;
+        this.oldGrade = oldGrade;
+        this.canSetCancelled = canSetCancelled;
+    }
+
+    public PlayerDownGradeEvent(Player player, int downGrade, int oldGrade, int newGrade) {
+        super(player.getName());
+        this.downGrade = downGrade;
+        this.newGrade = newGrade;
+        this.oldGrade = oldGrade;
+        this.canSetCancelled = true;
+    }
+
+    public PlayerDownGradeEvent(Player player, int downGrade, int oldGrade, int newGrade, boolean canSetCancelled) {
+        super(player.getName());
         this.downGrade = downGrade;
         this.newGrade = newGrade;
         this.oldGrade = oldGrade;
@@ -39,8 +55,8 @@ public class PlayerDownGradeEvent extends VKernelPlayerEvent implements Cancella
     }
 
     public final PlayerDownGradeEvent setDownGrade(int grade) {
-        if (grade > 0 && VKernel.getInstance().getManager().getPlayerManager().getPlayerData(player).level.getGrade() >= grade) {
-            PlayerData playerData = VKernel.getInstance().getManager().getPlayerManager().getPlayerData(player);
+        if (grade > 0 && VKernel.getInstance().getManager().getPlayerManager().getPlayerData(getPlayerName()).level.getGrade() >= grade) {
+            PlayerData playerData = VKernel.getInstance().getManager().getPlayerManager().getPlayerData(getPlayerName());
             downGrade = grade;
             newGrade = playerData.level.getGrade() - downGrade;
         }
