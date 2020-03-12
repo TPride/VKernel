@@ -25,12 +25,12 @@ public class HubCommand extends Command {
         if (!VKernel.getInstance().isEnabled())
             return false;
         if (commandSender instanceof Player) {
-            Config config = new Config(VKernel.getInstance().getDataFolder() + File.separator + "setting.yml", Config.YAML);
+            Config config = VKernel.getInstance().getFileInstance().getSettings();
             if (!config.exists(SettingKey.MAIN_WORLD))
-                commandSender.sendMessage(TextFormat.RED + "在传送时出了点小问题.");
+                commandSender.sendMessage(TextFormat.RED + "在传送时出了点小问题.a");
             else {
-                if (!Server.getInstance().isLevelLoaded(SettingKey.MAIN_WORLD))
-                    commandSender.sendMessage(TextFormat.RED + "在传送时出现了点小问题.");
+                if (!Server.getInstance().isLevelLoaded(config.getString(SettingKey.MAIN_WORLD)))
+                    commandSender.sendMessage(TextFormat.RED + "在传送时出现了点小问题.b");
                 else {
                     try {
                         PlayerHubEvent event;
@@ -39,14 +39,14 @@ public class HubCommand extends Command {
                             commandSender.sendMessage(TextFormat.RED + "传送被取消");
                             return true;
                         }
-                        ((Player) commandSender).getPlayer().teleport(Server.getInstance().getLevelByName(VKernel.getInstance().getFileInstance().getSettings().getString(SettingKey.MAIN_WORLD)).getSpawnLocation());
+                        ((Player) commandSender).getPlayer().teleport(Server.getInstance().getLevelByName(config.getString(SettingKey.MAIN_WORLD)).getSpawnLocation());
                     } catch (NullPointerException e) {
-                        commandSender.sendMessage(TextFormat.RED + "在传送时出现了点小问题.");
+                        commandSender.sendMessage(TextFormat.RED + "在传送时出现了点小问题.c");
                         e.printStackTrace();
                     }
                 }
             }
-        }
+        } else commandSender.sendMessage(TextFormat.RED + "请在游戏中输入");
         return true;
     }
 }

@@ -138,7 +138,7 @@ public class VKernel extends PluginBase {
         }
 
         public Config getSettings() {
-            return new Config(getDataFolder() + File.separator + "settings.yml", Config.YAML);
+            return new Config(getDataFolder() + File.separator + "setting.yml", Config.YAML);
         }
 
         public Config getConfig() {

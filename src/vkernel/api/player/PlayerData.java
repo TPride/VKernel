@@ -101,12 +101,18 @@ public class PlayerData {
     }
 
     public class Config { //配置文件
-        public Config() {
+        private String playerName;
 
+        public Config() {
+            playerName = player.getName();
+        }
+
+        public Config(String playerName) {
+            this.playerName = playerName;
         }
 
         public final File getFile() {
-            return new File(VKernel.getInstance().getDataFolder() + File.separator + VKernel.configDirs[1], player.getName() + ".yml");
+            return new File(VKernel.getInstance().getDataFolder() + File.separator + VKernel.configDirs[1], playerName + ".yml");
         }
 
         public final cn.nukkit.utils.Config getConfig() {
@@ -120,7 +126,7 @@ public class PlayerData {
         public final boolean create() {
             if (exists())
                 return false;
-            VKernel.getInstance().saveResource("initialPlayer.yml", VKernel.configDirs[1] + File.separator + player.getName() + ".yml", false);
+            VKernel.getInstance().saveResource("initialPlayer.yml", VKernel.configDirs[1] + File.separator + playerName + ".yml", false);
             cn.nukkit.utils.Config config = getConfig();
             cn.nukkit.utils.Config config1 = VKernel.getInstance().getFileInstance().getConfig();
             config.set(PlayerKey.CURRENCY_SYSTEM.concat(PlayerKey.MONEY), config1.getInt(ConfigKey.CURRENCY.concat(ConfigKey.MONEY)));
