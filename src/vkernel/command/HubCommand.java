@@ -10,8 +10,6 @@ import vkernel.VKernel;
 import vkernel.event.player.PlayerHubEvent;
 import vkernel.includes.SettingKey;
 
-import java.io.File;
-
 /**
  * Created by TPride on 2020/2/28.
  */

@@ -23,6 +23,10 @@ public class StringMath {
         return Pattern.compile("-?[0-9]+.?[0-9]*").matcher(str).matches();
     }
 
+    public static boolean isIntegerNumber(String string) {
+        return Pattern.compile("[0-9]*").matcher(string).matches();
+    }
+
     public static double eval(String expression) {
         if (expression == null || expression.trim().equals(""))
             throw new IllegalArgumentException("表达式不能为空");

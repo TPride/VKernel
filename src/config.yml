@@ -3,6 +3,7 @@ level:
   max: 1000
 currency:
   money-name: "铜币"
-  point-name: "钻石"
+  point-name: "钻币"
   auto-money: 0
   auto-point: 0
+  pointTomoney: 10

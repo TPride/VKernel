@@ -3,6 +3,7 @@ package vkernel.event.player.currency;
 import cn.nukkit.Player;
 import cn.nukkit.event.Cancellable;
 import vkernel.VKernel;
+import vkernel.api.player.PlayerData;
 
 public class PlayerReduceMoneyEvent extends CurrencyEvent implements Cancellable {
     private int money;
@@ -22,11 +23,11 @@ public class PlayerReduceMoneyEvent extends CurrencyEvent implements Cancellable
     }
 
     public final int getNewMoney() {
-        return VKernel.getInstance().getManager().getPlayerManager().getPlayerData(playerName).currency.getMoney() - money;
+        return PlayerData.getCurrency(playerName).getMoney() - money;
     }
 
     public final PlayerReduceMoneyEvent setReduceMoney(int money) {
-        if (money >= 0 && VKernel.getInstance().getManager().getPlayerManager().getPlayerData(playerName).currency.getMoney() - money >= 0)
+        if (money >= 0 && PlayerData.getCurrency(playerName).getMoney() - money >= 0)
             this.money = money;
         return this;
     }

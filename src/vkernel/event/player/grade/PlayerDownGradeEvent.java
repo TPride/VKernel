@@ -55,10 +55,9 @@ public class PlayerDownGradeEvent extends GradeEvent implements Cancellable {
     }
 
     public final PlayerDownGradeEvent setDownGrade(int grade) {
-        if (grade > 0 && VKernel.getInstance().getManager().getPlayerManager().getPlayerData(getPlayerName()).level.getGrade() >= grade) {
-            PlayerData playerData = VKernel.getInstance().getManager().getPlayerManager().getPlayerData(getPlayerName());
+        if (grade > 0 && PlayerData.getLevel(getPlayerName()).getGrade() >= grade) {
             downGrade = grade;
-            newGrade = playerData.level.getGrade() - downGrade;
+            newGrade = PlayerData.getLevel(getPlayerName()).getGrade() - downGrade;
         }
         return this;
     }

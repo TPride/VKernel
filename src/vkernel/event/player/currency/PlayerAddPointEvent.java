@@ -3,6 +3,7 @@ package vkernel.event.player.currency;
 import cn.nukkit.Player;
 import cn.nukkit.event.Cancellable;
 import vkernel.VKernel;
+import vkernel.api.player.PlayerData;
 
 public class PlayerAddPointEvent extends CurrencyEvent implements Cancellable {
     private int point;
@@ -22,7 +23,7 @@ public class PlayerAddPointEvent extends CurrencyEvent implements Cancellable {
     }
 
     public final int getNewPoint() {
-        return VKernel.getInstance().getManager().getPlayerManager().getPlayerData(playerName).currency.getPoint() + point;
+        return PlayerData.getCurrency(playerName).getPoint() + point;
     }
 
     public final PlayerAddPointEvent setAddPoint(int point) {

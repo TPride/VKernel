@@ -46,8 +46,8 @@ public class Currency { //货币
 
     public boolean addMoney(int money) {
         if (config.exists() && money >= 0) {
-            PlayerAddMoneyEvent event = new PlayerAddMoneyEvent(playerName, money);
-            Server.getInstance().getPluginManager().callEvent(event);
+            PlayerAddMoneyEvent event;
+            Server.getInstance().getPluginManager().callEvent(event = new PlayerAddMoneyEvent(playerName, money));
             if (event.isCancelled())
                 return false;
             setMoney(event.getNewMoney());
@@ -58,8 +58,8 @@ public class Currency { //货币
 
     public boolean addPoint(int point) {
         if (config.exists() && point >= 0) {
-            PlayerAddPointEvent event = new PlayerAddPointEvent(playerName, point);
-            Server.getInstance().getPluginManager().callEvent(event);
+            PlayerAddPointEvent event;
+            Server.getInstance().getPluginManager().callEvent(event = new PlayerAddPointEvent(playerName, point));
             if (event.isCancelled())
                 return false;
             setPoint(event.getNewPoint());
@@ -70,8 +70,8 @@ public class Currency { //货币
 
     public boolean reduceMoney(int money) {
         if (config.exists() && money >= 0) {
-            PlayerReduceMoneyEvent event = new PlayerReduceMoneyEvent(playerName, money);
-            Server.getInstance().getPluginManager().callEvent(event);
+            PlayerReduceMoneyEvent event;
+            Server.getInstance().getPluginManager().callEvent(event = new PlayerReduceMoneyEvent(playerName, money));
             if (event.isCancelled())
                 return false;
             setMoney(event.getNewMoney());
@@ -82,8 +82,8 @@ public class Currency { //货币
 
     public boolean reducePoint(int point) {
         if (config.exists() && point >= 0) {
-            PlayerReducePointEvent event = new PlayerReducePointEvent(playerName, point);
-            Server.getInstance().getPluginManager().callEvent(event);
+            PlayerReducePointEvent event;
+            Server.getInstance().getPluginManager().callEvent(event = new PlayerReducePointEvent(playerName, point));
             if (event.isCancelled())
                 return false;
             setPoint(event.getNewPoint());

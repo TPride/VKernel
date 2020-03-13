@@ -2,9 +2,8 @@ package vkernel.event.player.grade;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.Cancellable;
-import vkernel.VKernel;
 import vkernel.api.player.PlayerData;
-import vkernel.event.VKernelPlayerEvent;
+import vkernel.api.player.classes.Level;
 
 public class PlayerAddExpEvent extends GradeEvent implements Cancellable {
     private int addExp;
@@ -28,9 +27,9 @@ public class PlayerAddExpEvent extends GradeEvent implements Cancellable {
 
     public final PlayerAddExpEvent setAddExp(int exp) {
         if (exp > 0) {
-            PlayerData playerData = VKernel.getInstance().getManager().getPlayerManager().getPlayerData(getPlayerName());
+            Level level = PlayerData.getLevel(getPlayerName());
             addExp = exp;
-            isUpGrade = playerData.level.getExp() + exp >= playerData.level.getUpLine();
+            isUpGrade = level.getExp() + exp >= level.getUpLine();
         }
         return this;
     }

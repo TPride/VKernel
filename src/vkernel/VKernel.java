@@ -25,6 +25,7 @@ import cn.nukkit.Server;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import vkernel.command.HubCommand;
+import vkernel.command.MoneyCommand;
 import vkernel.manager.Manager;
 import java.io.File;
 
@@ -117,6 +118,7 @@ public class VKernel extends PluginBase {
     private void initFile() {
         saveResource("setting.yml", false);
         saveResource("config.yml", false);
+        saveResource("pf.png", false);
     }
 
     /**
@@ -124,6 +126,7 @@ public class VKernel extends PluginBase {
      */
     private void initCommand() {
         getServer().getCommandMap().register("hub", new HubCommand());
+        getServer().getCommandMap().register("money", new MoneyCommand());
     }
 
     /**
