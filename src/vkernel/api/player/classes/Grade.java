@@ -10,11 +10,11 @@ import vkernel.event.player.grade.PlayerUpGradeEvent;
 import vkernel.includes.ConfigKey;
 import vkernel.includes.PlayerKey;
 
-public class Level { //等级
+public class Grade { //等级
     private final Config config;
     private String playerName;
 
-    public Level(String playerName) {
+    public Grade(String playerName) {
         this.playerName = playerName;
         config = new Config(playerName);
     }
@@ -58,14 +58,11 @@ public class Level { //等级
 
     public boolean setGrade(int grade) {
         if (config.exists() && grade >= 0) {
-            int line = getUpLine();
             cn.nukkit.utils.Config config1 = config.getConfig();
             config1.set(PlayerKey.GRADE_SYSTEM.concat(PlayerKey.GRADE), grade);
             config1.save();
-            if (getUpLine() < line) {
-                config1.set(PlayerKey.GRADE_SYSTEM.concat(PlayerKey.EXP), 0);
-                config1.save();
-            }
+            if (getExp() > getUpLine())
+                setExp(0);
             return true;
         }
         return false;
@@ -93,9 +90,9 @@ public class Level { //等级
                         line = getUpLine(grade);
                     }
                     PlayerUpGradeEvent event;
-                    Server.getInstance().getPluginManager().callEvent(event = new PlayerUpGradeEvent(playerName, up, grade));
+                    Server.getInstance().getPluginManager().callEvent(event = new PlayerUpGradeEvent(playerName, up));
                     if (!event.isCancelled()) {
-                        config1.set(PlayerKey.GRADE_SYSTEM.concat(PlayerKey.EXP), event.getUpGrade());
+                        config1.set(PlayerKey.GRADE_SYSTEM.concat(PlayerKey.EXP), exp);
                         config1.set(PlayerKey.GRADE_SYSTEM.concat(PlayerKey.GRADE), event.getNewGrade());
                         config1.save();
                     } else return false;
@@ -132,19 +129,15 @@ public class Level { //等级
             } else {
                 if (getAllExp() < exp)
                     return false;
+                exp -= getExp();
                 int g = 1;
-                int nowExp = getExp() + getUpLine(getGrade() - g);
-                for (; exp >= nowExp; g++)
-                    nowExp += getUpLine(getGrade() - g);
-                PlayerReduceExpEvent reduceExpEvent;
-                Server.getInstance().getPluginManager().callEvent(reduceExpEvent = new PlayerReduceExpEvent(playerName, exp));
-                if (reduceExpEvent.isCancelled())
-                    return false;
-                nowExp -= exp;
-                PlayerDownGradeEvent downGradeEvent = new PlayerDownGradeEvent(playerName, g, getGrade(), getGrade() - g, false);
-                Server.getInstance().getPluginManager().callEvent(downGradeEvent);
+                for (; exp > 0; g++) {
+                    exp -= getUpLine(getGrade() - g);
+                }
+                PlayerDownGradeEvent downGradeEvent;
+                Server.getInstance().getPluginManager().callEvent(downGradeEvent = new PlayerDownGradeEvent(playerName, g - 1, getGrade(), false));
                 setGrade(downGradeEvent.getNewGrade());
-                setExp(nowExp);
+                setExp(Math.abs(exp));
             }
             return true;
         }
@@ -155,7 +148,7 @@ public class Level { //等级
         if (config.exists() && grade > 0) {
             if (getGrade() + grade > VKernel.getInstance().getFileInstance().getConfig().getInt(ConfigKey.LEVEL.concat(ConfigKey.MAX)))
                 return false;
-            PlayerUpGradeEvent event = new PlayerUpGradeEvent(playerName, grade, getGrade() + grade);
+            PlayerUpGradeEvent event = new PlayerUpGradeEvent(playerName, grade);
             Server.getInstance().getPluginManager().callEvent(event);
             if (event.isCancelled())
                 return false;
@@ -168,7 +161,7 @@ public class Level { //等级
     public boolean reduceGrade(int grade) {
         if (config.exists() && grade > 0) {
             if (getGrade() - grade >= 0) {
-                PlayerDownGradeEvent event = new PlayerDownGradeEvent(playerName, grade, getGrade(), getGrade() - grade);
+                PlayerDownGradeEvent event = new PlayerDownGradeEvent(playerName, grade, getGrade());
                 Server.getInstance().getPluginManager().callEvent(event);
                 if (event.isCancelled())
                     return false;
