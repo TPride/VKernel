@@ -14,7 +14,7 @@ import vkernel.includes.ConfigKey;
 
 public class CurrencyCommand extends Command {
     public CurrencyCommand() {
-        super("currency", VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME) + "指令(货币)"), "/money");
+        super("currency",  "货币", "/currency");
     }
 
     @Override
