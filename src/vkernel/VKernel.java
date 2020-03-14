@@ -26,6 +26,7 @@ import cn.nukkit.Server;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import vkernel.api.player.PlayerData;
+import vkernel.command.GradeCommand;
 import vkernel.command.HubCommand;
 import vkernel.command.CurrencyCommand;
 import vkernel.manager.Manager;
@@ -134,6 +135,7 @@ public class VKernel extends PluginBase {
     private void initCommand() {
         getServer().getCommandMap().register("hub", new HubCommand());
         getServer().getCommandMap().register("currency", new CurrencyCommand());
+        getServer().getCommandMap().register("grade", new GradeCommand());
     }
 
     /**

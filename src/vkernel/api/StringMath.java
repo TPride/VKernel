@@ -24,6 +24,8 @@ public class StringMath {
     }
 
     public static boolean isIntegerNumber(String string) {
+        if (string == null)
+            return false;
         return Pattern.compile("[0-9]*").matcher(string).matches();
     }
 

@@ -2,42 +2,40 @@ package vkernel.event.player.grade;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.Cancellable;
-import vkernel.VKernel;
-import vkernel.api.player.PlayerData;
-import vkernel.event.VKernelPlayerEvent;
+import vkernel.api.player.classes.Grade;
 
 public class PlayerDownGradeEvent extends GradeEvent implements Cancellable {
     private int downGrade, oldGrade, newGrade;
     private final boolean canSetCancelled;
 
-    public PlayerDownGradeEvent(String player, int downGrade, int oldGrade, int newGrade) {
+    public PlayerDownGradeEvent(String player, int downGrade, int oldGrade) {
         super(player);
         this.downGrade = downGrade;
-        this.newGrade = newGrade;
+        this.newGrade = oldGrade - downGrade;
         this.oldGrade = oldGrade;
         this.canSetCancelled = true;
     }
 
-    public PlayerDownGradeEvent(String player, int downGrade, int oldGrade, int newGrade, boolean canSetCancelled) {
+    public PlayerDownGradeEvent(String player, int downGrade, int oldGrade, boolean canSetCancelled) {
         super(player);
         this.downGrade = downGrade;
-        this.newGrade = newGrade;
+        this.newGrade = oldGrade - downGrade;
         this.oldGrade = oldGrade;
         this.canSetCancelled = canSetCancelled;
     }
 
-    public PlayerDownGradeEvent(Player player, int downGrade, int oldGrade, int newGrade) {
+    public PlayerDownGradeEvent(Player player, int downGrade, int oldGrade) {
         super(player.getName());
         this.downGrade = downGrade;
-        this.newGrade = newGrade;
+        this.newGrade = oldGrade - downGrade;
         this.oldGrade = oldGrade;
         this.canSetCancelled = true;
     }
 
-    public PlayerDownGradeEvent(Player player, int downGrade, int oldGrade, int newGrade, boolean canSetCancelled) {
+    public PlayerDownGradeEvent(Player player, int downGrade, int oldGrade, boolean canSetCancelled) {
         super(player.getName());
         this.downGrade = downGrade;
-        this.newGrade = newGrade;
+        this.newGrade = oldGrade - downGrade;
         this.oldGrade = oldGrade;
         this.canSetCancelled = canSetCancelled;
     }
@@ -55,9 +53,9 @@ public class PlayerDownGradeEvent extends GradeEvent implements Cancellable {
     }
 
     public final PlayerDownGradeEvent setDownGrade(int grade) {
-        if (grade > 0 && PlayerData.getLevel(getPlayerName()).getGrade() >= grade) {
+        if (grade > 0 && new Grade(getPlayerName()).getGrade() >= grade) {
             downGrade = grade;
-            newGrade = PlayerData.getLevel(getPlayerName()).getGrade() - downGrade;
+            newGrade = new Grade(getPlayerName()).getGrade() - downGrade;
         }
         return this;
     }

@@ -31,8 +31,9 @@ public class CurrencyCommand extends Command {
                             TextFormat.RED + "[m = " + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME)) + TextFormat.RESET + TextFormat.RED + "," + " p = " + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.POINT_NAME)) + TextFormat.RESET + TextFormat.RED + "]",
                             TextFormat.GREEN + "/currency help - 货币帮助",
                             TextFormat.GREEN + "/currency my - 我的货币",
-                            TextFormat.GREEN + "/currency give <m/p> <playerName> <IntValue> - 给某个用户转账" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME)) + "或" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.POINT_NAME)),
-                            TextFormat.GREEN + "/currency <add/reduce/set> <m/p> <playerName> <IntValue> - 给某个用户(给予/扣除/设置)" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME)) + "或" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.POINT_NAME)),
+                            TextFormat.GREEN + "/currency give <m/p> <playerName> <IntValue> - 给指定用户转账" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME)) + "或" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.POINT_NAME)),
+                            TextFormat.GREEN + "/currency look <playerName> - 查询指定用户货币",
+                            TextFormat.GREEN + "/currency <add/reduce/set> <m/p> <playerName> <IntValue> - 给指定用户(给予/扣除/设置)" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME)) + "或" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.POINT_NAME)),
                             TextFormat.GREEN + "/currency name <m/p> <newName> - 设置货币名称"
                     };
                     for (int i = 0; i < string.length; i++) {
@@ -43,7 +44,7 @@ public class CurrencyCommand extends Command {
                     break;
                 case "my":
                     if (commandSender instanceof Player) {
-                        Currency currency = PlayerData.getCurrency(commandSender.getName());
+                        Currency currency = new Currency(commandSender.getName());
                         for (String i : new String[]{
                                 TextFormat.AQUA + "=== " + TextFormat.YELLOW + "Currency" + TextFormat.AQUA + " ===",
                                 TextFormat.RED + "您的" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME)) + TextFormat.RESET + TextFormat.RED + ": " + TextFormat.YELLOW + currency.getMoney(),
@@ -55,15 +56,16 @@ public class CurrencyCommand extends Command {
                     break;
                 case "give":
                     if (commandSender instanceof Player) {
-                        Currency currency = PlayerData.getCurrency(commandSender.getName());
+                        Currency currency = new Currency(commandSender.getName());
                         if (strings.length >= 4) {
                             if (!strings[1].equalsIgnoreCase("m") && !strings[1].equalsIgnoreCase("p")) {
                                 commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.RED + "改名失败,不存在该货币类型");
                                 return true;
                             }
-                            if (PlayerData.getConfig(strings[2]).exists() && !strings[2].equals(commandSender.getName())) {
+                            if (new vkernel.api.player.classes.Config(strings[2]).exists() && !strings[2].equals(commandSender.getName())) {
                                 if (StringMath.isIntegerNumber(strings[3]) && new Integer(strings[3]) > 0) {
-                                    Currency currency1 = PlayerData.getCurrency(strings[2]);
+                                    String playerName = StringMath.isIntegerNumber(strings[2]) ? PlayerData.getPlayerNameByNumID(strings[2]) : strings[2];
+                                    Currency currency1 = new Currency(playerName);
                                     int mp = new Integer(strings[3]);
                                     switch (strings[1].toLowerCase()) {
                                         case "m":
@@ -73,7 +75,7 @@ public class CurrencyCommand extends Command {
                                                commandSender.sendMessage(
                                                        TextFormat.AQUA + "=== " + TextFormat.YELLOW + "Currency" + TextFormat.AQUA + " ===\n"
                                                        + TextFormat.GREEN + "转账成功!\n"
-                                                       + TextFormat.YELLOW + "收账对象: " + TextFormat.AQUA + strings[2] + "\n"
+                                                       + TextFormat.YELLOW + "收账对象: " + TextFormat.AQUA + playerName + "\n"
                                                        + TextFormat.YELLOW + "数目: " + TextFormat.RED + mp + "\n"
                                                        + TextFormat.YELLOW + "货币类型: " + TextFormat.GOLD + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME)) + TextFormat.RESET
                                                );
@@ -85,9 +87,9 @@ public class CurrencyCommand extends Command {
                                                 currency.reducePoint(mp);
                                                 currency1.addPoint(mp, commandSender.getName());
                                                 commandSender.sendMessage(
-                                                        TextFormat.AQUA + "=== " + TextFormat.YELLOW + "Currency" + TextFormat.AQUA + "===\n"
+                                                        TextFormat.AQUA + "=== " + TextFormat.YELLOW + "Currency" + TextFormat.AQUA + " ===\n"
                                                                 + TextFormat.GREEN + "转账成功!\n"
-                                                                + TextFormat.YELLOW + "收账对象: " + TextFormat.AQUA + strings[2] + "\n"
+                                                                + TextFormat.YELLOW + "收账对象: " + TextFormat.AQUA + playerName + "\n"
                                                                 + TextFormat.YELLOW + "数目: " + TextFormat.RED + mp + "\n"
                                                                 + TextFormat.YELLOW + "货币类型: " + TextFormat.GOLD + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.POINT_NAME)) + TextFormat.RESET
                                                 );
@@ -107,6 +109,24 @@ public class CurrencyCommand extends Command {
                     } else
                         commandSender.sendMessage(TextFormat.RED + "请在游戏中输入");
                     break;
+                case "look":
+                    if (strings.length >= 2) {
+                        String playerName = StringMath.isIntegerNumber(strings[1]) ? PlayerData.getPlayerNameByNumID(strings[1]) : strings[1];
+                        if (!new vkernel.api.player.classes.Config(playerName).exists()) {
+                            commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.RED + "不存在该玩家");
+                            return true;
+                        }
+                        Currency currency = new Currency(playerName);
+                        for (String i : new String[]{
+                                TextFormat.AQUA + "=== " + TextFormat.YELLOW + "Currency" + TextFormat.AQUA + " ===",
+                                TextFormat.RED + playerName + "的" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME)) + TextFormat.RESET + TextFormat.RED + ": " + TextFormat.YELLOW + currency.getMoney(),
+                                TextFormat.RED + playerName + "的" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.POINT_NAME)) + TextFormat.RESET + TextFormat.RED + ": " + TextFormat.YELLOW + currency.getPoint()
+
+                        })
+                            commandSender.sendMessage(i);
+                    } else
+                        commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.RED + "请输入查询的玩家名称");
+                    break;
                 case "add":
                     if (commandSender.isOp()) {
                         if (strings.length >= 4) {
@@ -114,18 +134,19 @@ public class CurrencyCommand extends Command {
                                 commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.RED + "不存在该货币类型");
                                 return true;
                             }
-                            if (PlayerData.getConfig(strings[2]).exists()) {
+                            String playerName = StringMath.isIntegerNumber(strings[2]) ? PlayerData.getPlayerNameByNumID(strings[2]) : strings[2];
+                            if (new vkernel.api.player.classes.Config(playerName).exists()) {
                                 if (StringMath.isIntegerNumber(strings[3]) && new Integer(strings[3]) > 0) {
                                     int mp = new Integer(strings[3]);
-                                    Currency currency = PlayerData.getCurrency(strings[2]);
+                                    Currency currency = new Currency(playerName);
                                     switch (strings[1].toLowerCase()) {
                                         case "m":
                                             currency.addMoney(mp, commandSender.getName());
-                                            commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.GREEN + "已给予玩家 " + TextFormat.AQUA + strings[2] + TextFormat.GREEN + " " + TextFormat.RED + mp + TextFormat.GREEN + "个" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME)) + TextFormat.RESET);
+                                            commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.GREEN + "已给予玩家 " + TextFormat.AQUA + playerName + TextFormat.GREEN + " " + TextFormat.RED + mp + TextFormat.GREEN + "个" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME)) + TextFormat.RESET);
                                             break;
                                         case "p":
                                             currency.addPoint(mp, commandSender.getName());
-                                            commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.GREEN + "已给予玩家 " + TextFormat.AQUA + strings[2] + TextFormat.GREEN + " " + TextFormat.RED + mp + TextFormat.GREEN + "个" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.POINT_NAME)) + TextFormat.RESET);
+                                            commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.GREEN + "已给予玩家 " + TextFormat.AQUA + playerName + TextFormat.GREEN + " " + TextFormat.RED + mp + TextFormat.GREEN + "个" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.POINT_NAME)) + TextFormat.RESET);
                                             break;
                                     }
                                 } else
@@ -144,22 +165,23 @@ public class CurrencyCommand extends Command {
                                 commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.RED + "不存在该货币类型");
                                 return true;
                             }
-                            if (PlayerData.getConfig(strings[2]).exists()) {
+                            String playerName = StringMath.isIntegerNumber(strings[2]) ? PlayerData.getPlayerNameByNumID(strings[2]) : strings[2];
+                            if (new vkernel.api.player.classes.Config(playerName).exists()) {
                                 if (StringMath.isIntegerNumber(strings[3]) && new Integer(strings[3]) > 0) {
                                     int mp = new Integer(strings[3]);
-                                    Currency currency = PlayerData.getCurrency(strings[2]);
+                                    Currency currency = new Currency(playerName);
                                     switch (strings[1].toLowerCase()) {
                                         case "m":
                                             if (currency.getMoney() >= mp) {
                                                 currency.reduceMoney(mp, commandSender.getName());
-                                                commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.GREEN + "已扣除玩家 " + TextFormat.AQUA + strings[2] + TextFormat.GREEN + " " + TextFormat.RED + mp + TextFormat.GREEN + "个" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME)) + TextFormat.RESET);
+                                                commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.GREEN + "已扣除玩家 " + TextFormat.AQUA + playerName + TextFormat.GREEN + " " + TextFormat.RED + mp + TextFormat.GREEN + "个" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME)) + TextFormat.RESET);
                                             } else
                                                 commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.RED + "扣除失败!该玩家的" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME)) + TextFormat.RESET + TextFormat.RED + "不足以满足扣除的数值");
                                             break;
                                         case "p":
                                             if (currency.getPoint() >= mp) {
                                                 currency.reducePoint(mp, commandSender.getName());
-                                                commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.GREEN + "已扣除玩家 " + TextFormat.AQUA + strings[2] + TextFormat.GREEN + " " + TextFormat.RED + mp + TextFormat.GREEN + "个" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.POINT_NAME)) + TextFormat.RESET);
+                                                commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.GREEN + "已扣除玩家 " + TextFormat.AQUA + playerName + TextFormat.GREEN + " " + TextFormat.RED + mp + TextFormat.GREEN + "个" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.POINT_NAME)) + TextFormat.RESET);
                                             } else
                                                 commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.RED + "扣除失败!该玩家的" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.POINT_NAME)) + TextFormat.RESET + TextFormat.RED + "不足以满足扣除的数值");
                                             break;
@@ -180,15 +202,16 @@ public class CurrencyCommand extends Command {
                                 commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.RED + "不存在该货币类型");
                                 return true;
                             }
-                            if (PlayerData.getConfig(strings[2]).exists()) {
+                            String playerName = StringMath.isIntegerNumber(strings[2]) ? PlayerData.getPlayerNameByNumID(strings[2]) : strings[2];
+                            if (new vkernel.api.player.classes.Config(playerName).exists()) {
                                 if (StringMath.isIntegerNumber(strings[3]) && new Integer(strings[3]) >= 0) {
                                     int mp = new Integer(strings[3]);
-                                    Currency currency = PlayerData.getCurrency(strings[2]);
+                                    Currency currency = new Currency(playerName);
                                     switch (strings[1].toLowerCase()) {
                                         case "m":
                                             currency.setMoney(mp);
                                             commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.GREEN + "已设置玩家 " + TextFormat.AQUA + strings[2] + TextFormat.GREEN + " 拥有" + TextFormat.RED + mp + TextFormat.GREEN + "个" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME)) + TextFormat.RESET);
-                                            Player player = Server.getInstance().getPlayerExact(strings[2]);
+                                            Player player = Server.getInstance().getPlayerExact(playerName);
                                             if (player != null) {
                                                 if (player.isOnline())
                                                     player.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.GREEN + "您拥有的" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.MONEY_NAME)) + TextFormat.RESET + TextFormat.GREEN + "已被更改为" + TextFormat.RED + mp + TextFormat.GREEN + "个");
@@ -197,7 +220,7 @@ public class CurrencyCommand extends Command {
                                         case "p":
                                             currency.setPoint(mp);
                                             commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.GREEN + "已设置玩家 " + TextFormat.AQUA + strings[2] + TextFormat.GREEN + " 拥有" + TextFormat.RED + mp + TextFormat.GREEN + "个" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.POINT_NAME)) + TextFormat.RESET);
-                                            player = Server.getInstance().getPlayerExact(strings[2]);
+                                            player = Server.getInstance().getPlayerExact(playerName);
                                             if (player != null) {
                                                 if (player.isOnline())
                                                     player.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.GREEN + "您拥有的" + VKernel.getInstance().getFileInstance().getConfig().getString(ConfigKey.CURRENCY.concat(ConfigKey.POINT_NAME)) + TextFormat.RESET + TextFormat.GREEN + "已被更改为" + TextFormat.RED + mp + TextFormat.GREEN + "个");

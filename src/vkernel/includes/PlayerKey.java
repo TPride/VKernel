@@ -1,6 +1,8 @@
 package vkernel.includes;
 
 public interface PlayerKey {
+    String NUMID = "numID";
+
     String GRADE_SYSTEM = "level";
     String GRADE = ".grade";
     String EXP = ".exp";

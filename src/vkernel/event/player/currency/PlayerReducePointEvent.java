@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.event.Cancellable;
 import vkernel.VKernel;
 import vkernel.api.player.PlayerData;
+import vkernel.api.player.classes.Currency;
 
 public class PlayerReducePointEvent extends CurrencyEvent implements Cancellable {
     private int point;
@@ -38,11 +39,11 @@ public class PlayerReducePointEvent extends CurrencyEvent implements Cancellable
     }
 
     public final int getNewPoint() {
-        return PlayerData.getCurrency(playerName).getPoint() - point;
+        return new Currency(playerName).getPoint() - point;
     }
 
     public final PlayerReducePointEvent setReducePoint(int point) {
-        if (point >= 0 && PlayerData.getCurrency(playerName).getPoint() - point >= 0)
+        if (point >= 0 && new Currency(playerName).getPoint() - point >= 0)
             this.point = point;
         return this;
     }
