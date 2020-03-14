@@ -131,9 +131,8 @@ public class Grade { //等级
                     return false;
                 exp -= getExp();
                 int g = 1;
-                for (; exp > 0; g++) {
+                for (; exp > 0; g++)
                     exp -= getUpLine(getGrade() - g);
-                }
                 PlayerDownGradeEvent downGradeEvent;
                 Server.getInstance().getPluginManager().callEvent(downGradeEvent = new PlayerDownGradeEvent(playerName, g - 1, getGrade(), false));
                 setGrade(downGradeEvent.getNewGrade());
