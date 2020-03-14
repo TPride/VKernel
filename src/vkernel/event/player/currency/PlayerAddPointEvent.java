@@ -7,15 +7,30 @@ import vkernel.api.player.PlayerData;
 
 public class PlayerAddPointEvent extends CurrencyEvent implements Cancellable {
     private int point;
+    private String form;
 
     public PlayerAddPointEvent(String playerName, int point) {
         super(playerName);
         this.point = point;
+        form = "CONSOLE";
+    }
+
+    public PlayerAddPointEvent(String playerName, int point, String form) {
+        super(playerName);
+        this.point = point;
+        this.form = form;
     }
 
     public PlayerAddPointEvent(Player player, int point) {
         super(player.getName());
         this.point = point;
+        form = "CONSOLE";
+    }
+
+    public PlayerAddPointEvent(Player player, int point, String form) {
+        super(player.getName());
+        this.point = point;
+        this.form = form;
     }
 
     public final int getAddPoint() {
@@ -30,5 +45,9 @@ public class PlayerAddPointEvent extends CurrencyEvent implements Cancellable {
         if (point >= 0)
             this.point = point;
         return this;
+    }
+
+    public final String getForm() {
+        return form;
     }
 }

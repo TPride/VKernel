@@ -21,13 +21,16 @@ package vkernel;
 //     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //               佛祖保佑         永无BUG
 
+import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
+import vkernel.api.player.PlayerData;
 import vkernel.command.HubCommand;
-import vkernel.command.MoneyCommand;
+import vkernel.command.CurrencyCommand;
 import vkernel.manager.Manager;
 import java.io.File;
+import java.util.Iterator;
 
 /**
  * Created by TPride on 2020/2/21.
@@ -53,6 +56,11 @@ public class VKernel extends PluginBase {
         initCommand();
         initEvent();
         kernelInfo("VKernel已启用");
+        //防止reload出现bug
+        for (Iterator<Player> iterator = Server.getInstance().getOnlinePlayers().values().iterator(); iterator.hasNext();) {
+            Player player = iterator.next();
+            VKernel.getInstance().getManager().getPlayerManager().put(player, new PlayerData(player));
+        }
     }
 
     @Override
@@ -118,7 +126,6 @@ public class VKernel extends PluginBase {
     private void initFile() {
         saveResource("setting.yml", false);
         saveResource("config.yml", false);
-        saveResource("pf.png", false);
     }
 
     /**
@@ -126,7 +133,7 @@ public class VKernel extends PluginBase {
      */
     private void initCommand() {
         getServer().getCommandMap().register("hub", new HubCommand());
-        getServer().getCommandMap().register("money", new MoneyCommand());
+        getServer().getCommandMap().register("currency", new CurrencyCommand());
     }
 
     /**
@@ -134,6 +141,7 @@ public class VKernel extends PluginBase {
      */
     private void initEvent() {
         Server.getInstance().getPluginManager().registerEvents(new PlayerListener(), this);
+        Server.getInstance().getPluginManager().registerEvents(new CurrencyListener(), this);
     }
 
     public class FileInstance {

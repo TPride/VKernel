@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
  * Created by TPride on 2020/2/22.
  */
 public class PlayerManager {
-    private LinkedHashMap<String, PlayerData> players = new LinkedHashMap<>();
+    private LinkedHashMap<String, PlayerData> players = new LinkedHashMap<String, PlayerData>();
 
     public PlayerManager() {
 
