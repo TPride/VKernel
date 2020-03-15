@@ -26,6 +26,10 @@ public class GameConfig {
         return dir.mkdirs();
     }
 
+    public String getDataFolder() {
+        return getDataFolder() + File.separator + VKernel.configDirs[0] + gameName;
+    }
+
     public boolean existsConfig(String levelName) {
         if (levelName == null || levelName.length() == 0)
             return false;
