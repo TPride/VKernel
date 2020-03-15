@@ -1,6 +1,6 @@
 name: VKernel
 main: vkernel.VKernel
-version: "1.0.2"
+version: "1.0.2_1"
 api: ["1.0.0"]
 load: POSTWORLD
 author: TPride
