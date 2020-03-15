@@ -28,6 +28,14 @@ public class RoomManager {
         return rooms.get(levelName);
     }
 
+    public final <T extends Room> T getRoom(String levelName, T room) {
+        if (levelName == null)
+            return room;
+        if (!exists(levelName))
+            return room;
+        return (T)rooms.get(levelName);
+    }
+
     public final boolean put(String levelName, Room room) {
         if (levelName == null || room == null)
             return false;

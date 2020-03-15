@@ -1,7 +1,7 @@
 package vkernel.api.config;
 
 import cn.nukkit.utils.Config;
-import com.sun.istack.internal.NotNull;
+
 import vkernel.VKernel;
 import java.io.File;
 
@@ -9,7 +9,7 @@ import java.io.File;
  * Created by TPride on 2020/2/23.
  */
 public class GameConfig {
-    private String gameName;
+    public final String gameName;
 
     public GameConfig(String gameName) {
         this.gameName = gameName;

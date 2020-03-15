@@ -49,8 +49,4 @@ public abstract class Level {
             return null;
         return Server.getInstance().getLevelByName(levelName);
     }
-
-    public Level getRoomLevel() {
-        return this;
-    }
 }
