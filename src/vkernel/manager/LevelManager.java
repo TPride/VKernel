@@ -37,8 +37,7 @@ public class LevelManager {
             return false;
         for (Iterator<LinkedList<String>> iterator = levels.values().iterator(); iterator.hasNext();) {
             LinkedList<String> l = iterator.next();
-            if (l.contains(levelName))
-                return true;
+            return l.contains(levelName);
         }
         return false;
     }
