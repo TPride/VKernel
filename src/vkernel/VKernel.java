@@ -117,6 +117,7 @@ public class VKernel extends PluginBase {
                 if (!new File(world, name).exists())
                     continue;
                 manager.getLevelManager().put(games[i].getName(), name);
+                Server.getInstance().loadLevel(name);
             }
         }
     }

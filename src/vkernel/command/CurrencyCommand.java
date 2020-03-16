@@ -62,9 +62,9 @@ public class CurrencyCommand extends Command {
                                 commandSender.sendMessage(TextFormat.WHITE + "Currency" + TextFormat.GRAY + " >> " + TextFormat.RED + "改名失败,不存在该货币类型");
                                 return true;
                             }
-                            if (new vkernel.api.player.classes.Config(strings[2]).exists() && !strings[2].equals(commandSender.getName())) {
+                            String playerName = StringMath.isIntegerNumber(strings[2]) ? PlayerData.getPlayerNameByNumID(strings[2]) : strings[2];
+                            if (new vkernel.api.player.classes.Config(playerName).exists() && !playerName.equals(commandSender.getName())) {
                                 if (StringMath.isIntegerNumber(strings[3]) && new Integer(strings[3]) > 0) {
-                                    String playerName = StringMath.isIntegerNumber(strings[2]) ? PlayerData.getPlayerNameByNumID(strings[2]) : strings[2];
                                     Currency currency1 = new Currency(playerName);
                                     int mp = new Integer(strings[3]);
                                     switch (strings[1].toLowerCase()) {
