@@ -8,4 +8,4 @@ currency:
 guild: ~
 prefix:
   using: ~
-  list: []
+  list: {}

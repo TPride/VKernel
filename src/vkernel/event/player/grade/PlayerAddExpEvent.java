@@ -2,7 +2,7 @@ package vkernel.event.player.grade;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.Cancellable;
-import vkernel.api.player.classes.Grade;
+import vkernel.api.player.datas.Grade;
 
 public class PlayerAddExpEvent extends GradeEvent implements Cancellable {
     private int addExp;

@@ -11,4 +11,13 @@ public interface ConfigKey {
     String POINT_NAME = ".point-name";
     String MONEY = ".auto-money";
     String POINT = ".auto-point";
+
+    String PREFIX = "prefix";
+    String OP = ".OP";
+    String PLAYER = ".PLAYER";
+    String PREFIXSWITCH = ".prefix-switch";
+    String NICKSWITCH = ".nick-switch";
+    String CHATSWITCH = ".chat-switch";
+    String TAGSWITCH = ".tag-switch";
+    String CHATFORMAT = ".chat-format";
 }

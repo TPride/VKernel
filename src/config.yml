@@ -7,3 +7,19 @@ currency:
   auto-money: 0
   auto-point: 0
   pointTomoney: 10
+prefix:
+  OP: "管理员"
+  PLAYER: "玩家"
+  nick-switch: true
+  prefix-switch: true
+  chat-switch: true
+  tag-switch: true
+  #pre - 称号
+  #name - 玩家名称
+  #grade - 等级
+  #per - 玩家权限: OP或玩家
+  format: "[@pre]@name"
+
+  #format - 名称显示格式
+  #msg - 聊天信息
+  chat-format: "@format: @msg"

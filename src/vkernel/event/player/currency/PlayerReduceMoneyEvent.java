@@ -2,8 +2,7 @@ package vkernel.event.player.currency;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.Cancellable;
-import vkernel.api.player.PlayerData;
-import vkernel.api.player.classes.Currency;
+import vkernel.api.player.datas.Currency;
 
 public class PlayerReduceMoneyEvent extends CurrencyEvent implements Cancellable {
     private int money;

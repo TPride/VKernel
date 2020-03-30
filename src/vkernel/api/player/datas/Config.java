@@ -1,29 +1,31 @@
-package vkernel.api.player.classes;
+package vkernel.api.player.datas;
 
+import com.sun.istack.internal.NotNull;
 import vkernel.VKernel;
 import vkernel.api.player.PlayerData;
 import vkernel.includes.ConfigKey;
 import vkernel.includes.PlayerKey;
 import java.io.File;
+import java.util.Objects;
 import java.util.Random;
 
 public class Config { //配置文件
-    private String playerName;
+    private final String playerName;
 
-    public Config(String playerName) {
+    public Config(@NotNull String playerName) {
         this.playerName = playerName;
     }
 
     public final File getFile() {
-        return playerName == null ? null : new File(VKernel.getInstance().getDataFolder() + File.separator + VKernel.configDirs[1], playerName + ".yml");
+        return new File(VKernel.getInstance().getDataFolder() + File.separator + VKernel.configDirs[1], playerName + ".yml");
     }
 
     public final cn.nukkit.utils.Config getConfig() {
-        return playerName == null ? null : new cn.nukkit.utils.Config(getFile(), cn.nukkit.utils.Config.YAML);
+        return new cn.nukkit.utils.Config(getFile(), cn.nukkit.utils.Config.YAML);
     }
 
     public final boolean exists() {
-        return playerName == null ? false : getFile().exists();
+        return playerName != null && Objects.requireNonNull(getFile()).exists();
     }
 
     public final boolean create() {
@@ -46,7 +48,7 @@ public class Config { //配置文件
         return getFile().delete();
     }
 
-    private final String makeNumID() {
+    private String makeNumID() {
         String numID = "";
         Random random = new Random();
         for (int i = 0; i < 5; i++)

@@ -8,10 +8,8 @@ import cn.nukkit.utils.TextFormat;
 import vkernel.VKernel;
 import vkernel.api.StringMath;
 import vkernel.api.player.PlayerData;
-import vkernel.api.player.classes.Config;
-import vkernel.api.player.classes.Currency;
-import vkernel.api.player.classes.Grade;
-import vkernel.includes.ConfigKey;
+import vkernel.api.player.datas.Config;
+import vkernel.api.player.datas.Grade;
 
 public class GradeCommand extends Command {
     public GradeCommand() {
@@ -24,15 +22,15 @@ public class GradeCommand extends Command {
             return false;
         if (strings.length == 0) {
             Server.getInstance().dispatchCommand(commandSender, "grade help");
-        } else if (strings.length >= 1) {
+        } else {
             switch (strings[0]) {
                 case "help":
                     String[] string = {
                             TextFormat.AQUA + "=== " + TextFormat.YELLOW + "Grade" + TextFormat.AQUA + " ===",
                             TextFormat.GREEN + "/grade help - 查看帮助",
                             TextFormat.GREEN + "/grade my - 查看我的等级与经验",
-                            TextFormat.GREEN + "/grade look <playerName||NumID> - 查看指定用户的等级与经验",
-                            TextFormat.GREEN + "/grade <add/set/reduce> <e/g> <playerName||NumID> <IntValue> - (添加/设置/减去)指定玩家的(经验/等级)"
+                            TextFormat.GREEN + "/grade look <playerName||nid> - 查看指定用户的等级与经验",
+                            TextFormat.GREEN + "/grade <add/set/reduce> <e/g> <playerName||nid> <IntValue> - (添加/设置/减去)指定玩家的(经验/等级)"
                     };
                     for (int i = 0; i < string.length; i++) {
                         if (!commandSender.isOp() && (i == string.length - 2))
@@ -45,9 +43,9 @@ public class GradeCommand extends Command {
                         if (new Config(commandSender.getName()).exists()) {
                             Grade grade = new Grade(commandSender.getName());
                             commandSender.sendMessage(TextFormat.AQUA + "=== " + TextFormat.YELLOW + "Currency" + TextFormat.AQUA + " ==="
-                                    + TextFormat.GREEN + "您的等级: " + TextFormat.RED + grade.getGrade()
-                                    + TextFormat.GREEN + "您的经验: " + TextFormat.YELLOW + grade.getExp()
-                                    + TextFormat.GREEN + "您的总经验: " + TextFormat.YELLOW + grade.getExp()
+                                    + TextFormat.GREEN + "您的等级: " + TextFormat.RED + grade.getGrade() + "\n"
+                                    + TextFormat.GREEN + "您的经验: " + TextFormat.YELLOW + grade.getExp() + "\n"
+                                    + TextFormat.GREEN + "您的总经验: " + TextFormat.YELLOW + grade.getExp() + "\n"
                                     + TextFormat.AQUA + "您距离下一级升级还差 " + TextFormat.RED + (grade.getUpLine() - grade.getExp()) + TextFormat.AQUA + " 经验"
                             );
                         } else
@@ -57,12 +55,15 @@ public class GradeCommand extends Command {
                     break;
                 case "look":
                     if (strings.length >= 2) {
-                        String playerName = StringMath.isIntegerNumber(strings[1]) ? PlayerData.getPlayerNameByNumID(strings[1]) : strings[1];
-                        if (!new vkernel.api.player.classes.Config(playerName).exists()) {
+                        String playerName = VKernel.getInstance().getPlayer(strings[1]);
+                        if (playerName == null || !new Config(playerName).exists()) {
                             commandSender.sendMessage(TextFormat.WHITE + "Grade" + TextFormat.GRAY + " >> " + TextFormat.RED + "不存在该玩家");
                             return true;
                         }
                         Grade grade = new Grade(playerName);
+                        PlayerData playerData = VKernel.getInstance().getManager().getPlayerManager().getPlayerData(playerName);
+                        if (playerData != null && !playerName.equals(strings[1]) && playerData.nick.isUsingNick())
+                            playerName = playerData.nick.getNickName();
                         for (String i : new String[]{
                                 TextFormat.AQUA + "=== " + TextFormat.YELLOW + "Grade" + TextFormat.AQUA + " ===",
                                 TextFormat.RED + playerName + "的等级: " + TextFormat.YELLOW + grade.getGrade(),
@@ -82,11 +83,14 @@ public class GradeCommand extends Command {
                                 commandSender.sendMessage(TextFormat.WHITE + "Grade" + TextFormat.GRAY + " >> " + TextFormat.RED + "不存在该类型的选项");
                                 return true;
                             }
-                            String playerName = StringMath.isIntegerNumber(strings[2]) ? PlayerData.getPlayerNameByNumID(strings[2]) : strings[2];
-                            if (new vkernel.api.player.classes.Config(playerName).exists()) {
+                            String playerName = VKernel.getInstance().getPlayer(strings[2]);
+                            if (playerName != null && new Config(playerName).exists()) {
                                 if (StringMath.isIntegerNumber(strings[3]) && new Integer(strings[3]) > 0) {
                                     int mp = new Integer(strings[3]);
                                     Grade grade = new Grade(playerName);
+                                    PlayerData playerData = VKernel.getInstance().getManager().getPlayerManager().getPlayerData(playerName);
+                                    if (playerData != null && !playerName.equals(strings[2]) && playerData.nick.isUsingNick())
+                                        playerName = playerData.nick.getNickName();
                                     switch (strings[1].toLowerCase()) {
                                         case "g":
                                             grade.addGrade(mp);
@@ -113,11 +117,14 @@ public class GradeCommand extends Command {
                                 commandSender.sendMessage(TextFormat.WHITE + "Grade" + TextFormat.GRAY + " >> " + TextFormat.RED + "不存在该类型的选项");
                                 return true;
                             }
-                            String playerName = StringMath.isIntegerNumber(strings[2]) ? PlayerData.getPlayerNameByNumID(strings[2]) : strings[2];
-                            if (new vkernel.api.player.classes.Config(playerName).exists()) {
+                            String playerName = VKernel.getInstance().getPlayer(strings[2]);
+                            if (playerName != null && new Config(playerName).exists()) {
                                 if (StringMath.isIntegerNumber(strings[3]) && new Integer(strings[3]) >= 0) {
                                     int mp = new Integer(strings[3]);
                                     Grade grade = new Grade(playerName);
+                                    PlayerData playerData = VKernel.getInstance().getManager().getPlayerManager().getPlayerData(playerName);
+                                    if (playerData != null && !playerName.equals(strings[2]) && playerData.nick.isUsingNick())
+                                        playerName = playerData.nick.getNickName();
                                     switch (strings[1].toLowerCase()) {
                                         case "g":
                                             grade.setGrade(mp);
@@ -144,11 +151,14 @@ public class GradeCommand extends Command {
                                 commandSender.sendMessage(TextFormat.WHITE + "Grade" + TextFormat.GRAY + " >> " + TextFormat.RED + "不存在该类型的选项");
                                 return true;
                             }
-                            String playerName = StringMath.isIntegerNumber(strings[2]) ? PlayerData.getPlayerNameByNumID(strings[2]) : strings[2];
-                            if (new vkernel.api.player.classes.Config(playerName).exists()) {
+                            String playerName = VKernel.getInstance().getPlayer(strings[2]);
+                            if (playerName != null && new Config(playerName).exists()) {
                                 if (StringMath.isIntegerNumber(strings[3]) && new Integer(strings[3]) > 0) {
                                     int mp = new Integer(strings[3]);
                                     Grade grade = new Grade(playerName);
+                                    PlayerData playerData = VKernel.getInstance().getManager().getPlayerManager().getPlayerData(playerName);
+                                    if (playerData != null && !playerName.equals(strings[2]) && playerData.nick.isUsingNick())
+                                        playerName = playerData.nick.getNickName();
                                     switch (strings[1].toLowerCase()) {
                                         case "g":
                                             if (grade.reduceGrade(mp))

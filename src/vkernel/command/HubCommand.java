@@ -25,10 +25,10 @@ public class HubCommand extends Command {
         if (commandSender instanceof Player) {
             Config config = VKernel.getInstance().getFileInstance().getSettings();
             if (!config.exists(SettingKey.MAIN_WORLD))
-                commandSender.sendMessage(TextFormat.RED + "在传送时出了点小问题.");
+                commandSender.sendMessage(TextFormat.RED + "在传送时出了点小问题");
             else {
                 if (!Server.getInstance().isLevelLoaded(config.getString(SettingKey.MAIN_WORLD)))
-                    commandSender.sendMessage(TextFormat.RED + "在传送时出现了点小问题.");
+                    commandSender.sendMessage(TextFormat.RED + "在传送时出现了点小问题");
                 else {
                     try {
                         PlayerHubEvent event;
@@ -39,7 +39,7 @@ public class HubCommand extends Command {
                         }
                         ((Player) commandSender).getPlayer().teleport(Server.getInstance().getLevelByName(config.getString(SettingKey.MAIN_WORLD)).getSpawnLocation());
                     } catch (NullPointerException e) {
-                        commandSender.sendMessage(TextFormat.RED + "在传送时出现了点小问题.");
+                        commandSender.sendMessage(TextFormat.RED + "在传送时出现了点小问题");
                         e.printStackTrace();
                     }
                 }

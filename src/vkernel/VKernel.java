@@ -24,12 +24,14 @@ package vkernel;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.plugin.PluginBase;
+import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.utils.Config;
+import vkernel.api.StringMath;
 import vkernel.api.player.PlayerData;
-import vkernel.command.GradeCommand;
-import vkernel.command.HubCommand;
-import vkernel.command.CurrencyCommand;
+import vkernel.command.*;
+import vkernel.includes.ConfigKey;
 import vkernel.manager.Manager;
+import vkernel.task.NameTask;
 import java.io.File;
 import java.util.Iterator;
 
@@ -60,8 +62,12 @@ public class VKernel extends PluginBase {
         //防止reload出现bug
         for (Iterator<Player> iterator = Server.getInstance().getOnlinePlayers().values().iterator(); iterator.hasNext();) {
             Player player = iterator.next();
-            VKernel.getInstance().getManager().getPlayerManager().put(player, new PlayerData(player));
+            PlayerData playerData = new PlayerData(player);
+            playerData.format = getFileInstance().getConfig().getString(ConfigKey.PREFIX.concat(ConfigKey.FORMAT));
+            playerData.chatFormat = getFileInstance().getConfig().getString(ConfigKey.PREFIX.concat(ConfigKey.CHATFORMAT));
+            VKernel.getInstance().getManager().getPlayerManager().put(player, playerData);
         }
+        initTask();
     }
 
     @Override
@@ -106,17 +112,36 @@ public class VKernel extends PluginBase {
         return FileInstance;
     }
 
+    public final String getPlayer(String name) { //兼容假名
+        if (name == null || name.length() == 0)
+            return null;
+        if (StringMath.isIntegerNumber(name) && name.length() == 5) { //如果是纯数字的字符串
+            if (PlayerData.existsNumID(name)) //是否存在该nid
+                return PlayerData.getPlayerNameByNumID(name);
+        } else {
+            String n = PlayerData.getRealNameByNick(name);
+            if (n != null)
+                return n;
+            return name;
+        }
+        return null;
+    }
+
     private void initLevelRoom() {
         File[] games = new File(getDataFolder() + File.separator + configDirs[0]).listFiles();
         String world = getServer().getDataPath() + File.separator + "worlds" + File.separator;
-        for (int i = 0; i < games.length; i++) {
-            manager.getLevelManager().registerGame(games[i].getName());
-            File[] configs = games[i].listFiles();
-            for (int j = 0; j < configs.length; j++) {
-                String name = configs[j].getName().substring(0, configs[j].getName().lastIndexOf("."));
+        if (games == null)
+            return;
+        for (File game : games) {
+            manager.getLevelManager().registerGame(game.getName());
+            File[] configs = game.listFiles();
+            if (configs == null)
+                continue;
+            for (File config : configs) {
+                String name = config.getName().substring(0, config.getName().lastIndexOf("."));
                 if (!new File(world, name).exists())
                     continue;
-                manager.getLevelManager().put(games[i].getName(), name);
+                manager.getLevelManager().put(game.getName(), name);
                 Server.getInstance().loadLevel(name);
             }
         }
@@ -134,9 +159,15 @@ public class VKernel extends PluginBase {
      * 初始化指令
      */
     private void initCommand() {
-        getServer().getCommandMap().register("hub", new HubCommand());
-        getServer().getCommandMap().register("currency", new CurrencyCommand());
-        getServer().getCommandMap().register("grade", new GradeCommand());
+        getServer().getCommandMap().register("VKernel", new HubCommand());
+        getServer().getCommandMap().register("VKernel", new CurrencyCommand());
+        getServer().getCommandMap().register("VKernel", new GradeCommand());
+        getServer().getCommandMap().register("VKernel", new NumIDCommand());
+        getServer().getCommandMap().register("VKernel", new NickCommand());
+        getServer().getCommandMap().register("VKernel", new UnNickCommand());
+        getServer().getCommandMap().register("VKernel", new PrefixCommand());
+        getServer().getCommandMap().register("VKernel", new SwitchCommand());
+        getServer().getCommandMap().register("VKernel", new FormatCommand());
     }
 
     /**
@@ -145,6 +176,18 @@ public class VKernel extends PluginBase {
     private void initEvent() {
         Server.getInstance().getPluginManager().registerEvents(new PlayerListener(), this);
         Server.getInstance().getPluginManager().registerEvents(new CurrencyListener(), this);
+    }
+
+    /**
+     * 初始化计时器
+     */
+    private void initTask() {
+        Server.getInstance().getScheduler().scheduleDelayedTask(this, ()->Server.getInstance().getScheduler().scheduleAsyncTask(this, new AsyncTask() {
+            @Override
+            public void onRun() {
+                Server.getInstance().getScheduler().scheduleRepeatingTask(new NameTask(), 20);
+            }
+        }), 20);
     }
 
     public class FileInstance {

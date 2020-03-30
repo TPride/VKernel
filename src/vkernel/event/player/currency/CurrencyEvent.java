@@ -2,6 +2,8 @@ package vkernel.event.player.currency;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
+import vkernel.VKernel;
+import vkernel.api.player.PlayerData;
 import vkernel.event.VKernelEvent;
 
 public class CurrencyEvent extends VKernelEvent {
@@ -16,6 +18,14 @@ public class CurrencyEvent extends VKernelEvent {
     }
 
     public final Player getPlayer() {
-        return Server.getInstance().getPlayerExact(playerName);
+        Player player = Server.getInstance().getPlayerExact(playerName);
+        if (player != null)
+            return player;
+        else {
+            String name = VKernel.getInstance().getPlayer(playerName);
+            if (name != null)
+                return Server.getInstance().getPlayerExact(name);
+            return null;
+        }
     }
 }

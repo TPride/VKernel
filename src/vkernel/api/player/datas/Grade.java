@@ -1,6 +1,7 @@
-package vkernel.api.player.classes;
+package vkernel.api.player.datas;
 
 import cn.nukkit.Server;
+import com.sun.istack.internal.NotNull;
 import vkernel.VKernel;
 import vkernel.api.StringMath;
 import vkernel.event.player.grade.PlayerAddExpEvent;
@@ -12,9 +13,9 @@ import vkernel.includes.PlayerKey;
 
 public class Grade { //等级
     private final Config config;
-    private String playerName;
+    private final String playerName;
 
-    public Grade(String playerName) {
+    public Grade(@NotNull String playerName) {
         this.playerName = playerName;
         config = new Config(playerName);
     }

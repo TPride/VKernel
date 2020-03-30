@@ -1,6 +1,7 @@
-package vkernel.api.player.classes;
+package vkernel.api.player.datas;
 
 import cn.nukkit.Server;
+import com.sun.istack.internal.NotNull;
 import vkernel.event.player.currency.PlayerAddMoneyEvent;
 import vkernel.event.player.currency.PlayerAddPointEvent;
 import vkernel.event.player.currency.PlayerReduceMoneyEvent;
@@ -11,7 +12,7 @@ public class Currency { //货币
     private final String playerName;
     private final Config config;
 
-    public Currency(String playerName) {
+    public Currency(@NotNull String playerName) {
         this.playerName = playerName;
         config = new Config(playerName);
     }

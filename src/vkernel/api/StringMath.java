@@ -52,14 +52,20 @@ public class StringMath {
                     if (optStack.empty())
                         optStack.push(curOpt);
                     else {
-                        if (curOpt.equals("("))
-                            optStack.push(curOpt);
-                        else if (curOpt.equals(")"))
-                            directCalc(optStack, numStack, true);
-                        else if (curOpt.equals("=")) {
-                            directCalc(optStack, numStack, false);
-                            return numStack.pop().doubleValue();
-                        } else compareAndCalc(optStack, numStack, curOpt);
+                        switch (curOpt) {
+                            case "(":
+                                optStack.push(curOpt);
+                                break;
+                            case ")":
+                                directCalc(optStack, numStack, true);
+                                break;
+                            case "=":
+                                directCalc(optStack, numStack, false);
+                                return numStack.pop().doubleValue();
+                            default:
+                                compareAndCalc(optStack, numStack, curOpt);
+                                break;
+                        }
                     }
                 }
             }
